@@ -94,4 +94,5 @@
     <string name="title_activity_collection_comment_main">CollectionCommentMainActivity</string>
     <string name="title_activity_collection">CollectionActivity</string>
     <string name="title_activity_comment">CommentActivity</string>
+    <string name="title_activity_test_add_comment">TestAddCommentActivity</string>
 </resources>

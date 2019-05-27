@@ -10,9 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".TestAddCommentActivity"
+            android:label="@string/title_activity_test_add_comment"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".CommentActivity"
             android:label="@string/title_activity_comment"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CollectionActivity"
             android:label="@string/title_activity_collection"
@@ -20,10 +25,10 @@
         <activity
             android:name=".CollectionCommentMainActivity"
             android:label="@string/title_activity_collection_comment_main"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
