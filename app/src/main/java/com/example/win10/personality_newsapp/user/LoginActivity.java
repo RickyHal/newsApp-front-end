@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.example.win10.personality_newsapp.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Button button;
     private EditText et_username;
     private EditText et_userpwd;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
           button=(Button) findViewById(R.id.click_in);
           et_username = (EditText) findViewById(R.id.et_username);
           et_userpwd = (EditText) findViewById(R.id.et_password);
+          back=(ImageView) findViewById(R.id.login_back) ;
           button.setOnClickListener(this);
+          back.setOnClickListener(this);
 
     }
     @Override
@@ -48,6 +53,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else {
                     Toast.makeText(LoginActivity.this, "账号和密码不匹配，请重新输入", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.login_back:
+                Intent intent1=new Intent(LoginActivity.this,userActivity.class);
+                startActivity(intent1);
                 break;
             default:
                 break;
