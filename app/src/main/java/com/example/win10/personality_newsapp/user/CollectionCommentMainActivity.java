@@ -1,21 +1,15 @@
-package com.example.win10.personality_newsapp;
+package com.example.win10.personality_newsapp.user;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-import java.lang.reflect.Field;
+import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.collection.CollectionActivity;
+import com.example.win10.personality_newsapp.comment.CommentActivity;
 
 public class CollectionCommentMainActivity extends TabActivity {
 
