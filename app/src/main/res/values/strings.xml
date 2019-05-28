@@ -94,4 +94,9 @@
     <string name="title_activity_collection_comment_main">CollectionCommentMainActivity</string>
     <string name="title_activity_collection">CollectionActivity</string>
     <string name="title_activity_comment">CommentActivity</string>
+    <string name="user_collection">我的收藏</string>
+    <string name="user_comment">我的评论</string>
+    <string name="user_good">我的点赞</string>
+    <string name="user_history">浏览历史</string>
+    <string name="user_name">大仙的小弟</string>
 </resources>
