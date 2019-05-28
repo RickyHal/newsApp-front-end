@@ -24,6 +24,7 @@ import java.util.Map;
 public class CollectionActivity extends AppCompatActivity {
     private List<Map<String,Object>> list;
     SimpleAdapter simpleAdapter;
+
     private List<Map<String,Object>> putData(){
 
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
@@ -65,7 +66,7 @@ public class CollectionActivity extends AppCompatActivity {
         listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
 
 //        删除全部收藏记录
-        Button deleteall=(Button)findViewById(R.id.deleteall);
+        Button deleteall=(Button)findViewById(R.id.deleteall_collection);
         deleteall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +107,7 @@ public class CollectionActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                startActivity(new Intent(CollectionActivity.this,.class));
+
             }
         });
 
@@ -136,7 +137,7 @@ public class CollectionActivity extends AppCompatActivity {
                 bb.setMessage("您确定要删除该条收藏吗？");
                 bb.setTitle("提示");
                 bb.show();
-                return false;
+                return true;
             }
         });
 

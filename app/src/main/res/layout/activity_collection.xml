@@ -14,13 +14,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_weight="2"
             android:text="欢迎查看您的收藏"
 
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/deleteall"
+            android:id="@+id/deleteall_collection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
