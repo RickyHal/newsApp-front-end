@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_bottom_1"
+        android:enabled="true"
+        android:icon="@mipmap/v_home"
+        android:title="首页"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/item_bottom_2"
+        android:enabled="true"
+        android:icon="@mipmap/v_video"
+        android:title="视频"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/item_bottom_3"
+        android:enabled="true"
+        android:icon="@mipmap/v_login"
+        android:title="未登录"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>
