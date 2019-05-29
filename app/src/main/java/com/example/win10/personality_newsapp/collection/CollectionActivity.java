@@ -1,6 +1,7 @@
 package com.example.win10.personality_newsapp.collection;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +13,23 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.MainActivity;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.news_item;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,31 +38,35 @@ public class CollectionActivity extends AppCompatActivity {
     private List<Map<String,Object>> list;
     SimpleAdapter simpleAdapter;
 
-    private List<Map<String,Object>> putData(){
+    private static String timestampToDate(long time) {
+        if (time < 10000000000L) {
+            time = time * 1000;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sd = sdf.format(new Date(Long.parseLong(String.valueOf(time))));
+        return sd;
+    }
 
-        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-        Map<String,Object> map1 = new HashMap<String,Object>();
-        map1.put("author", "腾讯新闻");
-        map1.put("time", "2019-05-25");
-        map1.put("title", "习近平：稀土是重要的战略资源 要加大科技创新工作力度");
-        list.add(map1);
-        Map<String,Object> map2 = new HashMap<String,Object>();
-        map2.put("author", "新浪新闻");
-        map2.put("time", "2019-06-23");
-        map2.put("title", "“中科院研究生被杀案”：接风宴为何变成一场杀戮？");
-        list.add(map2);
-        Map<String,Object> map3 = new HashMap<String,Object>();
-        map3.put("author", "人民网");
-        map3.put("time", "2019-05-30");
-        map3.put("title", "回答了：我国的芯片落后但我国有哪些技术领先或处于垄断地位？");
-        list.add(map3);
-
-        Map<String,Object> map4= new HashMap<String,Object>();
-        map4.put("author", "教育网");
-        map4.put("time", "2019-12-01");
-        map4.put("title", "家长问：如何才能让孩子远离游戏，更加良好地学习呢？");
-        list.add(map4);
+    private List<Map<String,Object>> putData(RequestQueue requestQueue,String user_id) {
+            final List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+            //发送volley请求
+            final String url="http://120.77.144.237/getCollectRec/?user_id=1";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {//jsonObject为请求返回的Json格式数据
+                        Toast.makeText(CollectionActivity.this,jsonObject.toString(),Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(CollectionActivity.this,volleyError.toString(),Toast.LENGTH_LONG).show();
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
         return list;
+
     }
 
     @Override
@@ -55,9 +74,9 @@ public class CollectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
         ListView listview = (ListView)findViewById(R.id.mylistview);
-        this.list=putData();
-
-
+        RequestQueue requestQueue= Volley.newRequestQueue(this);
+//        String user_id=getIntent().getStringExtra("user_id");
+        this.list=putData(requestQueue,"1");
         this.simpleAdapter = new SimpleAdapter(this,this.list,R.layout.list_item,
                 new String[]{"author","time","title"},new int[]{R.id.author,R.id.time,R.id.title});
         listview.setAdapter(simpleAdapter);

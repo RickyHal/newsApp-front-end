@@ -26,7 +26,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/collection"
+                    android:contentDescription="TODO" android:src="@drawable/collection"
                     android:layout_gravity="center_vertical"
                     />
                 <TextView
@@ -50,7 +50,7 @@
                     android:id="@+id/image2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/comment"
+                   android:contentDescription="TODO" android:src="@drawable/comment"
                     android:layout_marginLeft="20dp"
                     android:layout_gravity="center_vertical"
                     />

@@ -11,7 +11,7 @@
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/head_picture"
-            android:src="@drawable/ic_launcher_background"
+            android:contentDescription="TODO" android:src="@drawable/ic_launcher_background"
             android:layout_margin="10sp"
             android:layout_width="40sp"
             android:layout_height="40sp" />
