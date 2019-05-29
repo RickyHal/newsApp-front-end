@@ -50,4 +50,5 @@ public class news_item {
     }
 
 
+
 }

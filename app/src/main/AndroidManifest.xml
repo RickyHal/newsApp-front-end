@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.win10.personality_newsapp">
+
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <activity
+            android:name=".news_visit.News_Manifest"
+            android:label="News_Manifest"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:windowSoftInputMode="adjustPan"
             android:name=".TestAddCommentActivity"
             android:label="@string/title_activity_test_add_comment"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".comment.CommentActivity"
+            android:label="@string/title_activity_comment"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".collection.CollectionActivity"
             android:label="@string/title_activity_collection"
@@ -38,12 +53,8 @@
         <activity
             android:name=".user.userActivity"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".news_visit.News_Manifest"
-            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
