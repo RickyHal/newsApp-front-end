@@ -98,5 +98,6 @@
     <string name="user_comment">我的评论</string>
     <string name="user_good">我的点赞</string>
     <string name="user_history">浏览历史</string>
+    <string name="user_name">大仙的小弟</string>
     <string name="title_activity_test_add_comment">TestAddCommentActivity</string>
 </resources>
