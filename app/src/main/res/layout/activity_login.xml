@@ -7,7 +7,7 @@
         android:id="@+id/login_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/back"
+         android:contentDescription="TODO" android:src="@mipmap/back"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"/>
     <TextView
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_edittextname"
-            android:paddingBottom="15dp"
+             android:contentDescription="TODO" android:paddingBottom="15dp"
             android:paddingLeft="30dp"
             android:paddingTop="15dp" />
         <View
@@ -66,7 +66,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:visibility="invisible"
-            android:src="@mipmap/ic_backspace"/>
+             android:contentDescription="TODO" android:src="@mipmap/ic_backspace"/>
 
 
     </RelativeLayout>
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_edittextpwd"
-            android:paddingBottom="15dp"
+             android:contentDescription="TODO" android:paddingBottom="15dp"
             android:paddingLeft="30dp"
             android:paddingTop="15dp" />
         <View
@@ -118,7 +118,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:visibility="invisible"
-            android:src="@mipmap/ic_backspace"/>
+             android:contentDescription="TODO" android:src="@mipmap/ic_backspace"/>
 
 
     </RelativeLayout>

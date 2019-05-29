@@ -11,7 +11,7 @@
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/head_picture"
-            android:src="@drawable/ic_launcher_background"
+            android:contentDescription="TODO" android:src="@drawable/ic_launcher_background"
             android:layout_margin="10sp"
             android:layout_width="40sp"
             android:layout_height="40sp" />
@@ -53,7 +53,7 @@
         android:layout_marginRight="10sp"
         android:layout_marginBottom="10sp"
         android:background="@drawable/textview_border"
-        android:text="@新华社:习近平的数次地方考察，都与这件大事密切相关。" />
+        android:text="\@新华社:习近平的数次地方考察，都与这件大事密切相关。"/>
 
 
 

@@ -1,10 +1,13 @@
 package com.example.win10.personality_newsapp.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.win10.personality_newsapp.R;
 
@@ -15,6 +18,7 @@ public class LoginedActivity extends AppCompatActivity {
 
     private List<Setting> settingList=new ArrayList<>();
     private DividerItemDecoration mDividerItemDecoration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,17 @@ public class LoginedActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         SettingAdapter adapter =new SettingAdapter(settingList);
         recyclerView.setAdapter(adapter);
+        TextView mycollection=(TextView)findViewById(R.id.my_collection);
+        mycollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                intent.putExtra("user_id", "1");//设置参数,""
+                intent.setClass(LoginedActivity.this, CollectionCommentMainActivity.class);//从哪里跳到哪里
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void initSetting(){

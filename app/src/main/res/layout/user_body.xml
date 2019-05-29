@@ -17,7 +17,7 @@
 
     <ImageView
         android:id="@+id/image_user_setting"
-        android:layout_width="18sp"
+        android:layout_width="18sp" android:contentDescription="TODO" 
         android:layout_height="22sp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="10dp"
