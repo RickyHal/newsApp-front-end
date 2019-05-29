@@ -18,7 +18,10 @@
             android:name=".news_visit.News_Manifest"
             android:label="News_Manifest"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:windowSoftInputMode="adjustPan"
@@ -53,10 +56,7 @@
         <activity
             android:name=".user.userActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
     </application>
 

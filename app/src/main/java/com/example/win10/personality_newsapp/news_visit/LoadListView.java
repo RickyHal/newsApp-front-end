@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
 import com.example.win10.personality_newsapp.R;
+
 
 public class LoadListView extends ListView implements AbsListView.OnScrollListener {
     View footer;

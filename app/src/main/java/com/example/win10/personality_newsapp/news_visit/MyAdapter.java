@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.win10.personality_newsapp.R;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
