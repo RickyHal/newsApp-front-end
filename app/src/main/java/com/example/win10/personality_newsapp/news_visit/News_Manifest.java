@@ -1,4 +1,4 @@
-package com.example.win10.personality_newsapp;
+package com.example.win10.personality_newsapp.news_visit;
 
 import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

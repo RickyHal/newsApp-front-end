@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.win10.personality_newsapp">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
 
     <application
         android:allowBackup="true"
@@ -9,6 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <activity
+            android:name=".news_visit.News_Manifest"
+            android:label="News_Manifest"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:windowSoftInputMode="adjustPan"
             android:name=".TestAddCommentActivity"

@@ -1,7 +1,6 @@
 package com.example.win10.personality_newsapp.collection;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +16,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.win10.personality_newsapp.MainActivity;
 import com.example.win10.personality_newsapp.R;
-import com.example.win10.personality_newsapp.news_item;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,26 +45,51 @@ public class CollectionActivity extends AppCompatActivity {
         return sd;
     }
 
-    private List<Map<String,Object>> putData(RequestQueue requestQueue,String user_id) {
-            final List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-            //发送volley请求
-            final String url="http://120.77.144.237/getCollectRec/?user_id=1";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {//jsonObject为请求返回的Json格式数据
-                        Toast.makeText(CollectionActivity.this,jsonObject.toString(),Toast.LENGTH_LONG).show();
+    private List<Map<String,Object>> putData(String user_id){
+        final List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+        try {
+            RequestQueue requestQueue= Volley.newRequestQueue(this);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    "http://120.77.144.237/app/getCollectRec/?user_id="+user_id, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray data = response.getJSONArray("data");
+                        Integer code= (Integer)response.get("code");
+                        if(code==0){
+                            for (int i=0;i<data.length();i++){
+                                JSONObject oneitem=data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+                                Map<String,Object> map = new HashMap<String,Object>();
+                                map.put("author",oneitem.getString("tag")+" "+oneitem.getString("from"));
+                                map.put("time",timestampToDate(oneitem.getLong("timestamp")));
+                                map.put("title",oneitem.getString("title"));
+                                list.add(map);
+                            }
+                         // 给listview赋值
+                            CollectionActivity.this.list=list;
+                            ListView listview = (ListView)findViewById(R.id.mylistview);
+                            CollectionActivity.this.simpleAdapter = new SimpleAdapter(CollectionActivity.this,CollectionActivity.this.list,R.layout.list_item,
+                                    new String[]{"author","time","title"},new int[]{R.id.author,R.id.time,R.id.title});
+                            listview.setAdapter(simpleAdapter);
+                            listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
+                        }else{
+                            Toast.makeText(CollectionActivity.this.getApplicationContext(),"请求失败。",Toast.LENGTH_LONG).show();
+                        }
+                    }catch (JSONException e){
+                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(CollectionActivity.this,volleyError.toString(),Toast.LENGTH_LONG).show();
-                    }
-                });
-        requestQueue.add(jsonObjectRequest);
+                }
+            }, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(CollectionActivity.this.getApplicationContext(),"网络异常，请重试",Toast.LENGTH_LONG).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
-
     }
 
     @Override
@@ -74,13 +97,9 @@ public class CollectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
         ListView listview = (ListView)findViewById(R.id.mylistview);
-        RequestQueue requestQueue= Volley.newRequestQueue(this);
+
 //        String user_id=getIntent().getStringExtra("user_id");
-        this.list=putData(requestQueue,"1");
-        this.simpleAdapter = new SimpleAdapter(this,this.list,R.layout.list_item,
-                new String[]{"author","time","title"},new int[]{R.id.author,R.id.time,R.id.title});
-        listview.setAdapter(simpleAdapter);
-        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
+        this.list=putData("1");
 
 //        删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_collection);
