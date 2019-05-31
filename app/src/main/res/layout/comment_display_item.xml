@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/head_picture"
+            android:id="@+id/user_headepicture"
             android:src="@drawable/ic_launcher_background"
             android:layout_margin="10sp"
             android:layout_width="40sp"
@@ -21,14 +20,13 @@
             android:layout_margin="10sp"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/nickname"
+                android:id="@+id/user_name"
                 android:textSize="18sp"
                 android:text="大仙的第250位小迷弟"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
             <TextView
-                android:id="@+id/release_time"
+                android:id="@+id/user_release_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-05-31" />
@@ -36,23 +34,15 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/comment_content"
-        android:layout_width="wrap_content"
-        android:text="祖国万岁"
-        android:textSize="20sp"
-        android:layout_marginLeft="10sp"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/news_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10sp"
+        android:id="@+id/comment_item_content"
         android:textSize="18sp"
-        android:layout_marginRight="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70sp"
+        android:layout_marginRight="50sp"
         android:layout_marginBottom="20sp"
-        android:background="@drawable/textview_border"
-        android:text="@新华社:习近平的数次地方考察，都与这件大事密切相关。" />
+        android:text="我的评论" />
+
 
 
 

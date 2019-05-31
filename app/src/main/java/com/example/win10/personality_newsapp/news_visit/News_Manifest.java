@@ -218,29 +218,6 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
     public void obtainData() {
 
         try {
-
-            /*RequestQueue mQueue = Volley.newRequestQueue(News_Manifest.this);
-            JsonArrayRequest jsonArray = new JsonArrayRequest("http://120.77.144.237/getNewsList/",
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                           // Log.d("Tag:", response.toString());
-
-                            Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //Log.e("Error: ", error.getMessage());
-                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
-                }
-            });
-
-            mQueue.add(jsonArray);*/
-
-            // String jsonUrl = "http://152.123.55.102:8080/json.html";
-
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getNewsList/", null, new Response.Listener<JSONObject>() {
                 @Override
@@ -267,10 +244,6 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
 
                         }
                         myAdapter.notifyDataSetChanged();
-                        //String size=Integer.toString(newslist.size());
-                        //Toast.makeText(getApplicationContext(),size,Toast.LENGTH_LONG).show();
-
-                        //Toast.makeText(getApplicationContext(),"加载完成",Toast.LENGTH_LONG).show();
                     }catch (JSONException e){
                         Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
                     }

@@ -10,11 +10,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.win10.personality_newsapp.R;
-import com.example.win10.personality_newsapp.TestAddCommentActivity;
-import com.example.win10.personality_newsapp.comment.CommentActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LoginedActivity extends AppCompatActivity {
 
@@ -39,12 +40,38 @@ public class LoginedActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         SettingAdapter adapter =new SettingAdapter(settingList);
         recyclerView.setAdapter(adapter);
+        TextView mycomment=(TextView)findViewById(R.id.my_comment);
+        mycomment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                Map<String,String> user=new HashMap<String,String>();
+                user.put("open_page","1");
+
+                //！！！！！！！罗哥这里设置数据
+                user.put("user_id","1");
+                user.put("user_name","罗东升");
+                user.put("user_avatar_url","https://uuclock-1254170634.cos.ap-chengdu.myqcloud.com/JSG/user/logo/logo.png");
+
+                intent.putExtra("user", (Serializable)user);
+                intent.setClass(LoginedActivity.this, CollectionCommentMainActivity.class);//从哪里跳到哪里
+                startActivity(intent);
+            }
+        });
         TextView mycollection=(TextView)findViewById(R.id.my_collection);
         mycollection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent();
-                intent.putExtra("user_id", "1");//设置参数,""
+                Map<String,String> user=new HashMap<String,String>();
+                user.put("open_page","0");
+
+                //！！！！！！！罗哥这里设置数据
+                user.put("user_id","1");
+                user.put("user_name","罗东升");
+                user.put("user_avatar_url","https://uuclock-1254170634.cos.ap-chengdu.myqcloud.com/JSG/user/logo/logo.png");
+
+                intent.putExtra("user", (Serializable)user);
                 intent.setClass(LoginedActivity.this, CollectionCommentMainActivity.class);//从哪里跳到哪里
                 startActivity(intent);
             }
