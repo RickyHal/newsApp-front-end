@@ -2,19 +2,25 @@ package com.example.win10.personality_newsapp.user;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.win10.personality_newsapp.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button button;
+    //private Button button;
+    private ImageView button;
     private EditText et_username;
     private EditText et_userpwd;
     private ImageView back;
@@ -23,10 +29,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-          button=(Button) findViewById(R.id.click_in);
+          button= (ImageView) findViewById(R.id.click_in);
           et_username = (EditText) findViewById(R.id.et_username);
-          et_userpwd = (EditText) findViewById(R.id.et_password);
+          et_userpwd =(EditText)  findViewById(R.id.et_password);
           back=(ImageView) findViewById(R.id.login_back) ;
+          /*if(et_username.getText().toString()!=""){
+              button.setColorFilter(0xD81B1B);
+
+
+          }*/
+
           button.setOnClickListener(this);
           back.setOnClickListener(this);
 

@@ -53,13 +53,13 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_main);
-        textView1=findViewById(R.id.text1);
-        textView2=findViewById(R.id.text2);
-        textView3=findViewById(R.id.text3);
-        textView4=findViewById(R.id.text4);
-        textView5=findViewById(R.id.text5);
-        textView6=findViewById(R.id.text6);
-        textView7=findViewById(R.id.text7);
+        textView1=(TextView) findViewById(R.id.text1);
+        textView2=(TextView)findViewById(R.id.text2);
+        textView3=(TextView)findViewById(R.id.text3);
+        textView4=(TextView)findViewById(R.id.text4);
+        textView5=(TextView)findViewById(R.id.text5);
+        textView6=(TextView)findViewById(R.id.text6);
+        textView7=(TextView)findViewById(R.id.text7);
         textView1.setTextColor(0xFFFF0000);
         textView1.setTypeface(null, Typeface.BOLD);
         textView2.setTextColor(0xFF444444);
