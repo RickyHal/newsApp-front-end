@@ -1,13 +1,7 @@
-package com.example.win10.personality_newsapp.video_list;
+package com.example.win10.personality_newsapp.video_detail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,17 +10,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.win10.personality_newsapp.R;
-import android.widget.MediaController;
+import com.example.win10.personality_newsapp.video_list.VideoActivity;
+import com.example.win10.personality_newsapp.video_list.VideoItem;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 public class MyAdapter extends BaseAdapter {
@@ -34,12 +27,12 @@ public class MyAdapter extends BaseAdapter {
     ArrayList<VideoItem> list;
     LayoutInflater inflater;
     RequestQueue requestQueue;
-    VideoActivity videoActivity;
-    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list,VideoActivity videoActivity) {
+    VideoDetailActivity videoDetailActivity;
+    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list, VideoDetailActivity videoDetailActivity) {
         this.inflater = LayoutInflater.from(context);
         this.requestQueue = requestQueue;
         this.list = list;
-        this.videoActivity=videoActivity;
+        this.videoDetailActivity=videoDetailActivity;
     }
 
     public int getCount() {
@@ -73,7 +66,7 @@ public class MyAdapter extends BaseAdapter {
 //        video_pic.setImageURI(uri);
         NetworkImageView video_pic=(NetworkImageView)view.findViewById(R.id.video_pic);
         ViewGroup.LayoutParams layoutlp=video_pic.getLayoutParams();
-        WindowManager wm = (WindowManager) this.videoActivity.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) this.videoDetailActivity.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         layoutlp.width=dm.widthPixels;

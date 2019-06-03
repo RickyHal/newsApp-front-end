@@ -1,8 +1,12 @@
 package com.example.win10.personality_newsapp.video_list;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -10,7 +14,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.MainActivity;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.video_detail.VideoDetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +40,16 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
         RequestsData();
         myAdapter=new MyAdapter(this,requestQueue,videoList,this);
         lv.setAdapter(myAdapter);
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 给bnt1添加点击响应事件
+                Intent intent =new Intent(VideoActivity.this, VideoDetailActivity.class);
+                intent.putExtra("video",videoList.get(position));
+                //启动
+                startActivity(intent);
+            }
+        });
     }
     public void  RequestsData(){
         try {

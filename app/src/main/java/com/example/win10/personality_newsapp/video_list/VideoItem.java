@@ -1,9 +1,9 @@
 package com.example.win10.personality_newsapp.video_list;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class VideoItem {
+import java.io.Serializable;
+
+public class VideoItem  implements Serializable {
     private String _id;
     private String title;
     private String from;

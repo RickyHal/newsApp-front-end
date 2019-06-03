@@ -1,4 +1,4 @@
-package com.example.win10.personality_newsapp.video_list;
+package com.example.win10.personality_newsapp.video_detail;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.example.win10.personality_newsapp.R;
 
-public class LoadListView   extends ListView implements AbsListView.OnScrollListener {
+public class LoadListView extends ListView implements AbsListView.OnScrollListener {
     View footer;
     int totalItemCount;
     int lastVisibleItem;
