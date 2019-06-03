@@ -10,40 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"></LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="284dp"
-                android:text="用 RelativeLayout先将你要固定的两个控件放置顶部和底部，中间用ScrollView，
-                ScrollView里写一个布局，LinearLayout，你想滚动应该是要放ListView之类的控件吧，嗯 就是这样" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="100sp"
-                android:text="用 RelativeLayout先将你要固定的两个控件放置顶部和底部，中间用ScrollView，
-                ScrollView里写一个布局，LinearLayout，你想滚动应该是要放ListView之类的控件吧，嗯 就是这样" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="100sp"
-                android:text="用 RelativeLayout先将你要固定的两个控件放置顶部和底部，中间用ScrollView，
-                ScrollView里写一个布局，LinearLayout，你想滚动应该是要放ListView之类的控件吧，嗯 就是这样" />
+    <ListView
+        android:id="@+id/comment_display_item"
+        android:layout_width="match_parent"
+        android:layout_height="683dp"
+        android:layout_above="@+id/show_star"
+        android:layout_marginBottom="-1dp"></ListView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="256dp"
-                android:text="用 RelativeLayout先将你要固定的两个控件放置顶部和底部，中间用ScrollView，
-                ScrollView里写一个布局，LinearLayout，你想滚动应该是要放ListView之类的控件吧，嗯 就是这样" />
-
-        </LinearLayout>
-    </ScrollView>
 
     <LinearLayout
         android:visibility="invisible"

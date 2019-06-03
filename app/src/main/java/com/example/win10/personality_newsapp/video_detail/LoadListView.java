@@ -1,4 +1,4 @@
-package com.example.win10.personality_newsapp.news_visit;
+package com.example.win10.personality_newsapp.video_detail;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -55,18 +55,18 @@ public class LoadListView extends ListView implements AbsListView.OnScrollListen
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-        this.lastVisibleItem=firstVisibleItem+visibleItemCount;
-        this.totalItemCount=totalItemCount;
+            this.lastVisibleItem=firstVisibleItem+visibleItemCount;
+            this.totalItemCount=totalItemCount;
     }
+
+
     public void setInterface(ILoadListerner iLoadListerner){
         this.iLoadListerner=iLoadListerner;
     }
-public interface ILoadListerner{
-    public  void onload();
-}
+    public interface ILoadListerner{
+        public  void onload();
+    }
     public void LoadingComplete(){
         isLoading=false;
     }
 }
-

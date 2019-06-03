@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.win10.personality_newsapp.R;
-import com.example.win10.personality_newsapp.TestAddCommentActivity;
+import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
