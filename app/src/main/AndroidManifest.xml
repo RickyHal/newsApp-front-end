@@ -22,6 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".video_detail.VideoDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->

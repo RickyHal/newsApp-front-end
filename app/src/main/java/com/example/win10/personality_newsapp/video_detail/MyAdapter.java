@@ -35,6 +35,7 @@ public class MyAdapter extends BaseAdapter {
         this.videoDetailActivity=videoDetailActivity;
     }
 
+    @Override
     public int getCount() {
         return list.size();
     }
@@ -62,8 +63,6 @@ public class MyAdapter extends BaseAdapter {
         ImageView play_btn=(ImageView) view.findViewById(R.id.play_btn);
         title.setText(list.get(position).getTitle());
         from.setText(list.get(position).getFrom());
-//        Uri uri= Uri.parse(list.get(position).getPic());
-//        video_pic.setImageURI(uri);
         NetworkImageView video_pic=(NetworkImageView)view.findViewById(R.id.video_pic);
         ViewGroup.LayoutParams layoutlp=video_pic.getLayoutParams();
         WindowManager wm = (WindowManager) this.videoDetailActivity.getSystemService(Context.WINDOW_SERVICE);
@@ -75,13 +74,6 @@ public class MyAdapter extends BaseAdapter {
         video_pic.setMaxHeight( dm.heightPixels/3);
         networkImageLoad(list.get(position).getPic(),video_pic);
         video_pic.setAdjustViewBounds(true);
-//        networkImageView.setMaxHeight(10);
-//        video.setVideoPath(list.get(position).getUrl());
-//        video.requestFocus();
-//        video.setBackground(this.createVideoThumbnail(list.get(position).getPic(),100,180));
-//        MediaController localMediaController = new MediaController(new VideoActivity());
-//        video.setMediaController(localMediaController);
-//        video.start();
         Random random = new Random();
         int min = random.nextInt(59) + 1;
         time.setText(min + "分钟前");
