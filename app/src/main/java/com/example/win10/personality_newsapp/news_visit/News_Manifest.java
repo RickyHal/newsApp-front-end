@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
 import com.example.win10.personality_newsapp.R;
 
 import org.json.JSONArray;
@@ -42,7 +41,7 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
     LoadListView lv;
 
     MyAdapter myAdapter;
-    RequestQueue requestQueue ;
+    RequestQueue requestQueue;
     TextView textView1;
     TextView textView2;
     TextView textView3;
@@ -50,17 +49,18 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
     TextView textView5;
     TextView textView6;
     TextView textView7;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_main);
-        textView1=findViewById(R.id.text1);
-        textView2=findViewById(R.id.text2);
-        textView3=findViewById(R.id.text3);
-        textView4=findViewById(R.id.text4);
-        textView5=findViewById(R.id.text5);
-        textView6=findViewById(R.id.text6);
-        textView7=findViewById(R.id.text7);
+        textView1 = (TextView) findViewById(R.id.text1);
+        textView2 = (TextView) findViewById(R.id.text2);
+        textView3 = (TextView) findViewById(R.id.text3);
+        textView4 = (TextView) findViewById(R.id.text4);
+        textView5 = (TextView) findViewById(R.id.text5);
+        textView6 = (TextView) findViewById(R.id.text6);
+        textView7 = (TextView) findViewById(R.id.text7);
         textView1.setTextColor(0xFFFF0000);
         textView1.setTypeface(null, Typeface.BOLD);
         textView2.setTextColor(0xFF444444);
@@ -70,12 +70,12 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
         textView5.setTextColor(0xFF444444);
         textView6.setTextColor(0xFF444444);
         textView7.setTextColor(0xFF444444);
-        lv=(LoadListView) findViewById(R.id.list);
+        lv = (LoadListView) findViewById(R.id.list);
         lv.setInterface(this);
-        requestQueue= Volley.newRequestQueue(this);
-        newslist= new ArrayList<news_item>();
+        requestQueue = Volley.newRequestQueue(this);
+        newslist = new ArrayList<news_item>();
         obtainData();
-        myAdapter=new MyAdapter(this,requestQueue,newslist);
+        myAdapter = new MyAdapter(this, requestQueue, newslist);
         lv.setAdapter(myAdapter);
 
         textView1.setOnClickListener(new View.OnClickListener() {
@@ -214,10 +214,32 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
     }
 
 
-
     public void obtainData() {
 
         try {
+
+            /*RequestQueue mQueue = Volley.newRequestQueue(News_Manifest.this);
+            JsonArrayRequest jsonArray = new JsonArrayRequest("http://120.77.144.237/getNewsList/",
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                           // Log.d("Tag:", response.toString());
+
+                            Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //Log.e("Error: ", error.getMessage());
+                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            mQueue.add(jsonArray);*/
+
+            // String jsonUrl = "http://152.123.55.102:8080/json.html";
+
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getNewsList/", null, new Response.Listener<JSONObject>() {
                 @Override
@@ -226,33 +248,37 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
                     try {
                         //newslist= new ArrayList<news_item>();
                         JSONArray data = response.getJSONArray("data");
-                        Integer code= (Integer)response.get("code");
-                        if (code==0){
-                            for (int i=0;i<data.length();i++){
-                                news_item newsitem=new news_item();
-                                JSONObject item=data.getJSONObject(i);
+                        Integer code = (Integer) response.get("code");
+                        if (code == 0) {
+                            for (int i = 0; i < data.length(); i++) {
+                                news_item newsitem = new news_item();
+                                JSONObject item = data.getJSONObject(i);
                                 newsitem.setFrom(item.getString("from"));
                                 newsitem.set_id(item.getString("_id"));
                                 newsitem.setTitle(item.getString("title"));
                                 newsitem.setTag(item.getString("tag"));
                                 JSONArray jsonArray = item.getJSONArray("imageurls");
-                                for(int j=0;j<jsonArray.length();j++){
-                                    newsitem.getImg().add((String)jsonArray.get(j));
+                                for (int j = 0; j < jsonArray.length(); j++) {
+                                    newsitem.getImg().add((String) jsonArray.get(j));
                                 }
                                 newslist.add(newsitem);
                             }
 
                         }
                         myAdapter.notifyDataSetChanged();
-                    }catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                        //String size=Integer.toString(newslist.size());
+                        //Toast.makeText(getApplicationContext(),size,Toast.LENGTH_LONG).show();
+
+                        //Toast.makeText(getApplicationContext(),"加载完成",Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }, new Response.ErrorListener(){
+            }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "获取失败", Toast.LENGTH_LONG).show();
                 }
             });
             requestQueue.add(jsonObjectRequest);
@@ -263,16 +289,17 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
 
     @Override
     public void onload() {
-        Handler handler=new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 obtainMoreData();
                 lv.LoadingComplete();
             }
-        },1000);
+        }, 1000);
 
     }
+
     public void obtainMoreData() {
 
         try {
@@ -285,18 +312,18 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
                     try {
                         //newslist= new ArrayList<news_item>();
                         JSONArray data = response.getJSONArray("data");
-                        Integer code= (Integer)response.get("code");
-                        if (code==0){
-                            for (int i=0;i<6;i++){
-                                news_item newsitem=new news_item();
-                                JSONObject item=data.getJSONObject(i);
+                        Integer code = (Integer) response.get("code");
+                        if (code == 0) {
+                            for (int i = 0; i < 6; i++) {
+                                news_item newsitem = new news_item();
+                                JSONObject item = data.getJSONObject(i);
                                 newsitem.setFrom(item.getString("from"));
                                 newsitem.set_id(item.getString("_id"));
                                 newsitem.setTitle(item.getString("title"));
                                 newsitem.setTag(item.getString("tag"));
                                 JSONArray jsonArray = item.getJSONArray("imageurls");
-                                for(int j=0;j<jsonArray.length();j++){
-                                    newsitem.getImg().add((String)jsonArray.get(j));
+                                for (int j = 0; j < jsonArray.length(); j++) {
+                                    newsitem.getImg().add((String) jsonArray.get(j));
                                 }
                                 newslist.add(newsitem);
                             }
@@ -307,15 +334,15 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
                         //Toast.makeText(getApplicationContext(),size,Toast.LENGTH_LONG).show();
 
                         //Toast.makeText(getApplicationContext(),"加载完成",Toast.LENGTH_LONG).show();
-                    }catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }, new Response.ErrorListener(){
+            }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "获取失败", Toast.LENGTH_LONG).show();
                 }
             });
             requestQueue.add(jsonObjectRequest);
