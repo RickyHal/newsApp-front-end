@@ -20,7 +20,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="50dp"
-        android:textColor="@color/login_input_Yes"
+        android:textColor="#0388fd"
         android:background="@drawable/bt_shape"
         android:text="置顶" />
 </RelativeLayout>
