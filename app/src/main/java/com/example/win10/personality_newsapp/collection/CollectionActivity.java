@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class CollectionActivity extends AppCompatActivity {
         final List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         try {
             RequestQueue requestQueue= Volley.newRequestQueue(this);
+            Log.d("22","http://120.77.144.237/app/getCollectRec/?user_id="+user_id);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getCollectRec/?user_id="+user_id, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -112,7 +114,7 @@ public class CollectionActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.mylistview);
 
         putData(getIntent().getStringExtra("user_id"));
-
+        Log.d("11","http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id"));
         listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
 
 //        删除全部收藏记录
