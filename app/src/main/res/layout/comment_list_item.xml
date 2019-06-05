@@ -52,7 +52,7 @@
         android:layout_marginRight="10sp"
         android:layout_marginBottom="20sp"
         android:background="@drawable/textview_border"
-        android:text="@新华社:习近平的数次地方考察，都与这件大事密切相关。" />
+        android:text="\@新华社:习近平的数次地方考察，都与这件大事密切相关。"/>
 
 
 

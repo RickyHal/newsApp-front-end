@@ -12,6 +12,5 @@
     <color name="bottom_nav_normal">#241F1F</color>
     <color name="login_input_NO">#cdcdcd</color>
     <color name="colorCursor">#cccccc</color>
-    <color name="login_input_Yes">#1296db</color>
     <color name="colortitleblue">#0388fd</color>
 </resources>

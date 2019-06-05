@@ -9,7 +9,6 @@ import android.widget.ListView;
 
 import com.example.win10.personality_newsapp.R;
 
-
 public class LoadListView extends ListView implements AbsListView.OnScrollListener {
     View footer;
     int totalItemCount;
@@ -63,10 +62,11 @@ public class LoadListView extends ListView implements AbsListView.OnScrollListen
     public void setInterface(ILoadListerner iLoadListerner){
         this.iLoadListerner=iLoadListerner;
     }
-    public interface ILoadListerner{
-        public  void onload();
-    }
+public interface ILoadListerner{
+    public  void onload();
+}
     public void LoadingComplete(){
         isLoading=false;
     }
 }
+
