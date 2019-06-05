@@ -14,9 +14,9 @@
     <ListView
         android:id="@+id/comment_display_item"
         android:layout_width="match_parent"
-        android:layout_height="683dp"
+        android:layout_height="680dp"
         android:layout_above="@+id/show_star"
-        android:layout_marginBottom="-1dp"></ListView>
+        android:layout_marginBottom="2dp"></ListView>
 
 
     <LinearLayout
@@ -32,7 +32,7 @@
             android:layout_width="250sp"
             android:layout_height="40sp"
             android:background="@drawable/layerlist"
-            android:hint="请输入你的评论..."
+            android:hint="请您畅所欲言..."
             android:layout_weight="2"
             android:inputType="" android:textSize="15sp" />
         <Button
