@@ -85,7 +85,7 @@ public class CollectionActivity extends AppCompatActivity {
                                     new String[]{"author","time","title"},
                                     new int[]{R.id.author,R.id.time,R.id.title});
                             listview.setAdapter(simpleAdapter);
-                            listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
+
                         }else{
                             Toast.makeText(CollectionActivity.this.getApplicationContext(),"请求失败。",Toast.LENGTH_LONG).show();
                         }
@@ -112,6 +112,8 @@ public class CollectionActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.mylistview);
 
         putData(getIntent().getStringExtra("user_id"));
+
+        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
 
 //        删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_collection);

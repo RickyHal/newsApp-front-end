@@ -44,5 +44,5 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="您还未收藏任何新闻哦"/>
+        android:text="没有数据哦"/>
 </LinearLayout>
