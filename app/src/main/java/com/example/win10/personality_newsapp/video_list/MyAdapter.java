@@ -2,32 +2,27 @@ package com.example.win10.personality_newsapp.video_list;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.example.win10.personality_newsapp.R;
-import android.widget.MediaController;
+import com.jaeger.library.StatusBarUtil;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 public class MyAdapter extends BaseAdapter {
 
@@ -35,13 +30,18 @@ public class MyAdapter extends BaseAdapter {
     LayoutInflater inflater;
     RequestQueue requestQueue;
     VideoActivity videoActivity;
-    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list,VideoActivity videoActivity) {
+    Handler handler = new Handler();
+    JCVideoPlayerStandard jCVideoPlayer;
+    int position=0;
+    LoadListView lv;
+    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list,VideoActivity videoActivity,LoadListView lv) {
         this.inflater = LayoutInflater.from(context);
         this.requestQueue = requestQueue;
         this.list = list;
         this.videoActivity=videoActivity;
+        this.lv=lv;
     }
-
+    @Override
     public int getCount() {
         return list.size();
     }
@@ -58,42 +58,20 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        boolean isTouch = false;
-        int totalTime;
-        int currentTime;
+        this.position=position;
         View view = inflater.inflate(R.layout.video_item, null);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView from = (TextView) view.findViewById(R.id.from);
-        TextView id = (TextView) view.findViewById(R.id.video_id);
         TextView time = (TextView) view.findViewById(R.id.time);
-        ImageView play_btn=(ImageView) view.findViewById(R.id.play_btn);
+        jCVideoPlayer=(JCVideoPlayerStandard)  view.findViewById(R.id.videoView);
         title.setText(list.get(position).getTitle());
         from.setText(list.get(position).getFrom());
-//        Uri uri= Uri.parse(list.get(position).getPic());
-//        video_pic.setImageURI(uri);
-        NetworkImageView video_pic=(NetworkImageView)view.findViewById(R.id.video_pic);
-        ViewGroup.LayoutParams layoutlp=video_pic.getLayoutParams();
-        WindowManager wm = (WindowManager) this.videoActivity.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics dm = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(dm);
-        layoutlp.width=dm.widthPixels;
-        layoutlp.height=dm.heightPixels/3;
-        video_pic.setMaxWidth( dm.widthPixels);
-        video_pic.setMaxHeight( dm.heightPixels/3);
-        networkImageLoad(list.get(position).getPic(),video_pic);
-        video_pic.setAdjustViewBounds(true);
-//        networkImageView.setMaxHeight(10);
-//        video.setVideoPath(list.get(position).getUrl());
-//        video.requestFocus();
-//        video.setBackground(this.createVideoThumbnail(list.get(position).getPic(),100,180));
-//        MediaController localMediaController = new MediaController(new VideoActivity());
-//        video.setMediaController(localMediaController);
-//        video.start();
-        Random random = new Random();
-        int min = random.nextInt(59) + 1;
-        time.setText(min + "分钟前");
+        jCVideoPlayer.setUp(list.get(position).getUrl(), JCVideoPlayer.SCREEN_LAYOUT_NORMAL,list.get(position).getTitle());
+        Glide.with(videoActivity).load(list.get(position).getPic()).into(jCVideoPlayer.thumbImageView);
+        time.setText(list.get(position).getTimestamp());
         return view;
     }
+
     public void networkImageLoad(String imageurl,NetworkImageView networkImageView){
 
         //创建一个ImageLoader
