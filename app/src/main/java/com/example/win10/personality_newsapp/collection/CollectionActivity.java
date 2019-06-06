@@ -1,6 +1,7 @@
 package com.example.win10.personality_newsapp.collection;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
+import com.example.win10.personality_newsapp.news_visit.News_Manifest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,6 +174,10 @@ public class CollectionActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Intent intent = new Intent();
+                intent.putExtra("news_id",list.get(position).get("_id").toString());
+                intent.setClass(CollectionActivity.this, NewsDetailActivity.class);
+                CollectionActivity.this.startActivity(intent);
 
             }
         });

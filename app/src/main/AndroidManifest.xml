@@ -24,21 +24,13 @@
         <activity
             android:name=".video_list.VideoActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity
-            android:name=".news_visit.News_Manifest"
-            android:label="News_Manifest"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".showcomment.TestAddCommentActivity"
             android:label="@string/title_activity_test_add_comment"
@@ -65,14 +57,19 @@
         <activity
             android:name=".user.userActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".news_visit.News_Manifest"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".news_visit.NewsDetailActivity" />
+        <activity android:name=".news_visit.Search_viewList" />
+        <activity android:name=".news_visit.search_result"></activity>
         <activity
             android:name=".user.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar">

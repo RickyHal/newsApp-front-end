@@ -9,6 +9,15 @@ public class news_item {
     private List<String> img =new ArrayList<String>();
     private String title;
     private String tag;
+    private String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getFrom() {
         return from;
@@ -48,7 +57,6 @@ public class news_item {
     public List<String> getImg() {
         return img;
     }
-
 
 
 }

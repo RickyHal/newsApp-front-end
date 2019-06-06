@@ -29,22 +29,19 @@
             android:id="@+id/imageView1"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_marginLeft="10dp" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_marginLeft="10dp" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imageView3"
             android:layout_width="100dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_marginLeft="10dp" />
 
     </LinearLayout>
 

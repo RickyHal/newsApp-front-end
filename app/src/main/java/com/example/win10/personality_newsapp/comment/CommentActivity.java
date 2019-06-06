@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.collection.CollectionActivity;
+import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
 
 import java.util.ArrayList;
@@ -100,7 +102,11 @@ public class CommentActivity extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(CommentActivity.this, TestAddCommentActivity.class));
+//                Intent intent = new Intent();
+//                intent.putExtra("news_id",list.get(position).get("_id").toString());
+//                intent.setClass(CommentActivity.this, NewsDetailActivity.class);
+//                CommentActivity.this.startActivity(intent);
+//                startActivity(new Intent(CommentActivity.this, TestAddCommentActivity.class));
             }
         });
 //        长按删除评论监听
