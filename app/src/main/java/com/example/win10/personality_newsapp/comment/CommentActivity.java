@@ -9,42 +9,72 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.collection.CollectionActivity;
 import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommentActivity extends AppCompatActivity {
-    private List<Map<String,Object>> list;
-    SimpleAdapter simpleAdapter;
+    private List<CommentBean> list;
+    CommentListAdapter commentListAdapter;
+    RequestQueue requestQueue ;
 
-    private List<Map<String,Object>> putData(){
-        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-        Map<String,Object> map1 = new HashMap<String,Object>();
-        map1.put("head_picture", R.drawable.ic_launcher_background);
-        map1.put("nickname", "大仙的第250位小迷弟");
-        map1.put("release_time", "2019-05-31");
-        map1.put("comment_content", "祖国万岁");
-        map1.put("news_item", "@新华社:习近平的数次地方考察，都与这件大事密切相关。");
-        list.add(map1);
-
-        Map<String,Object> map2 = new HashMap<String,Object>();
-        map2.put("head_picture", R.drawable.ic_launcher_background);
-        map2.put("nickname", "大仙的第250位小迷弟");
-        map2.put("release_time", "2019-05-31");
-        map2.put("comment_content", "点赞");
-        map2.put("news_item", "@新华社:习近平的数次地方考察，都与这件大事密切相关。");
-        list.add(map2);
-        return list;
+    private void putData(final HashMap<String, String> user_partinfo){
+        try {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    "http://120.77.144.237/app/getComment/?user_id="+user_partinfo.get("user_id"), null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray data = response.getJSONArray("data");
+                        Integer code= (Integer)response.get("code");
+                        if (code==0){
+                            for (int i=0;i<data.length();i++){
+                                CommentBean commentitem=new CommentBean();
+                                JSONObject item=data.getJSONObject(i);
+                                commentitem.setNickname(user_partinfo.get("user_name"));
+                                commentitem.setHeadpictureurl(user_partinfo.get("user_avatar_url"));
+                                commentitem.setComment_content(item.getString("comment_text"));
+                                commentitem.setRelease_time(item.getString("comment_time"));
+                                commentitem.setNews_item("@"+item.getJSONArray("news_info").getJSONObject(0).getString("from")
+                                        +":"+item.getJSONArray("news_info").getJSONObject(0).getString("title"));
+                                commentitem.setNew_id(item.getJSONArray("news_info").getJSONObject(0).getLong("_id"));
+                                commentitem.set_id(item.getInt("comment_id"));
+                                list.add(commentitem);
+                            }
+                        }
+                        commentListAdapter.notifyDataSetChanged();
+                    }catch (JSONException e){
+                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -52,15 +82,14 @@ public class CommentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ListView listview = (ListView)findViewById(R.id.mylist);
-        this.list=putData();
-
-        this.simpleAdapter = new SimpleAdapter(this,this.list,R.layout.comment_list_item,
-                new String[]{"head_picture","nickname","release_time","comment_content","news_item"},new int[]{R.id.head_picture,
-                R.id.nickname,R.id.release_time,R.id.comment_content,R.id.news_item});
-        listview.setAdapter(simpleAdapter);
+        requestQueue= Volley.newRequestQueue(this);
+        list= new ArrayList<CommentBean>();
+        HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+        putData(user_partinfo);
+        commentListAdapter=new CommentListAdapter(this,requestQueue,list);
+        listview.setAdapter(commentListAdapter);
         listview.setEmptyView((TextView)findViewById(R.id.comentnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
-
-        //        删除全部收藏记录
+        // 删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_comment);
         deleteall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,9 +107,22 @@ public class CommentActivity extends AppCompatActivity {
                     bb.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+                            RequestQueue requestQueue= Volley.newRequestQueue(CommentActivity.this);
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                    "http://120.77.144.237/app/deleteAllComment?user_id="+user_partinfo.get("user_id"),
+                                    null, new Response.Listener<JSONObject>() {
+                                public void onResponse(JSONObject response) {
+                                    Toast.makeText(getBaseContext(), "成功删除全部评论", Toast.LENGTH_SHORT).show();
+                                }
+                            }, new Response.ErrorListener() {
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            requestQueue.add(jsonObjectRequest);
                             CommentActivity.this.list.clear();
-                            simpleAdapter.notifyDataSetChanged();
-                            Toast.makeText(getBaseContext(), "成功删除全部评论", Toast.LENGTH_SHORT).show();
+                            CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                         }
                     });
                     bb.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -102,11 +144,10 @@ public class CommentActivity extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent();
-//                intent.putExtra("news_id",list.get(position).get("_id").toString());
-//                intent.setClass(CommentActivity.this, NewsDetailActivity.class);
-//                CommentActivity.this.startActivity(intent);
-//                startActivity(new Intent(CommentActivity.this, TestAddCommentActivity.class));
+                Intent intent = new Intent();
+                intent.putExtra("news_id",String.valueOf(list.get(position).getNew_id()));
+                intent.setClass(CommentActivity.this, NewsDetailActivity.class);
+                CommentActivity.this.startActivity(intent);
             }
         });
 //        长按删除评论监听
@@ -117,13 +158,27 @@ public class CommentActivity extends AppCompatActivity {
                 bb.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+                        RequestQueue requestQueue= Volley.newRequestQueue(CommentActivity.this);
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                "http://120.77.144.237/app/deleteComment?user_id="+user_partinfo.get("user_id")
+                                        +"&comment_id="+CommentActivity.this.list.get(position).get_id(),
+                                null, new Response.Listener<JSONObject>() {
+                            public void onResponse(JSONObject response) {
+                                Toast.makeText(getBaseContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                            }
+                        }, new Response.ErrorListener() {
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        requestQueue.add(jsonObjectRequest);
                         if(CommentActivity.this.list.remove(position)!=null){
                             System.out.println("success");
                         }else {
                             System.out.println("failed");
                         }
-                        CommentActivity.this.simpleAdapter.notifyDataSetChanged();
-                        Toast.makeText(getBaseContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                        CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                     }
                 });
                 bb.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -142,4 +197,3 @@ public class CommentActivity extends AppCompatActivity {
     }
 
 }
-

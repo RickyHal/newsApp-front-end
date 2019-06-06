@@ -25,6 +25,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.comment.CommentActivity;
+import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -233,7 +235,15 @@ public class NewsDetailActivity extends Activity {
         Button btn=new  Button(NewsDetailActivity.this);
         btn.setText("获取用户评论");
         vg.addView(btn);
-        //setContentView(R.layout.news_details);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("news_id",intent.getStringExtra("news_id"));
+                intent.setClass(NewsDetailActivity.this, TestAddCommentActivity.class);
+                NewsDetailActivity.this.startActivity(intent);
+            }
+        });
     }
 
     public void networkImageLoad(String imageurl,NetworkImageView networkImageView){
