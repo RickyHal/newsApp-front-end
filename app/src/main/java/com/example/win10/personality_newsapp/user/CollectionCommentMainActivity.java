@@ -57,7 +57,7 @@ public class CollectionCommentMainActivity extends TabActivity {
         }
 
 
-}
+    }
 
 
 }
