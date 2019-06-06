@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,8 +27,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.news_visit.News_Manifest;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,7 +94,7 @@ public class CollectionActivity extends AppCompatActivity {
                                     new String[]{"author","time","title"},
                                     new int[]{R.id.author,R.id.time,R.id.title});
                             listview.setAdapter(simpleAdapter);
-
+                            listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
                         }else{
                             Toast.makeText(CollectionActivity.this.getApplicationContext(),"请求失败。",Toast.LENGTH_LONG).show();
                         }
@@ -117,7 +121,7 @@ public class CollectionActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.mylistview);
 
         putData(getIntent().getStringExtra("user_id"));
-        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
+
 
 //        删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_collection);
@@ -181,6 +185,16 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
 
+        final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_collection);
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                CollectionActivity.this.list.clear();
+                CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+                putData(getIntent().getStringExtra("user_id"));
+                mRefreshLayout.finishRefresh();
+            }
+        });
 //        每项的长按删除时间监听
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
