@@ -239,7 +239,7 @@ public class NewsDetailActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra("news_id",intent.getStringExtra("news_id"));
+                intent.putExtra("news_id",getIntent().getStringExtra("news_id"));
                 intent.setClass(NewsDetailActivity.this, TestAddCommentActivity.class);
                 NewsDetailActivity.this.startActivity(intent);
             }

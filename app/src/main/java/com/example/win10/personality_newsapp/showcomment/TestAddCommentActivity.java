@@ -51,8 +51,25 @@ public class TestAddCommentActivity extends AppCompatActivity {
     RequestQueue requestQueue ;
     private boolean flag=true;
     private int position=-1;
-    private int ischecked=1;
+    private int ischecked=0;
     private List<CommentShowBean> list;
+
+    private void checkiscollected(){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                "http://120.77.144.237/app/checkCollect/?user_id=1&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"网络异常，请重试",Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
     private void putData(String news_id) {
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -102,10 +119,11 @@ public class TestAddCommentActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.comment_display_item);
         requestQueue= Volley.newRequestQueue(this);
         list= new ArrayList<CommentShowBean>();
-        putData("304268009287");
+
+        putData(String.valueOf(getIntent().getStringExtra("news_id")));
         commentShowAdapter=new CommentShowAdapter(this,requestQueue,list);
         listview.setAdapter(commentShowAdapter);
-        listview.setEmptyView((TextView)findViewById(R.id.comentnovalue));
+        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -139,7 +157,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 commentitem.setRelease_time(df.format(new Date()));
                 list.add(commentitem);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        "http://120.77.144.237/app/addComment/?_id="+"304268009287"+"&user_id="+"1"+
+                        "http://120.77.144.237/app/addComment/?_id="+String.valueOf(getIntent().getStringExtra("news_id"))+"&user_id="+"2"+
                                 "&comment_text="+reply_content, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -161,6 +179,11 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 commentShowAdapter.notifyDataSetChanged();
             }
         });
+
+
+
+//        添加收藏逻辑
+        checkiscollected();
         if(ischecked==1){
             imagestar.setImageResource(R.mipmap.yes_collection);
         }else{
@@ -177,6 +200,8 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 }
             }
         });
+
+
         textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,10 +232,6 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
-
-
 
 }

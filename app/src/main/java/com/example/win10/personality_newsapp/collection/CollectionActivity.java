@@ -117,8 +117,7 @@ public class CollectionActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.mylistview);
 
         putData(getIntent().getStringExtra("user_id"));
-        Log.d("11","http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id"));
-        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
+        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
 
 //        删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_collection);
