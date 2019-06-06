@@ -1,6 +1,7 @@
 package com.example.win10.personality_newsapp.user;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
 
 import java.io.Serializable;
@@ -17,16 +21,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginedActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class LoginedActivity extends AppCompatActivity {
+    private Myapp myapp;
     private List<Setting> settingList=new ArrayList<>();
     private DividerItemDecoration mDividerItemDecoration;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_user_view);
+        myapp = (Myapp)getApplication();
+        requestQueue= Volley.newRequestQueue(this);
+        TextView nickname=(TextView) findViewById(R.id.include_userlogin) .findViewById(R.id.user_name);
+        nickname.setText(myapp.getUser_name());
+        CircleImageView p=(CircleImageView) findViewById(R.id.include_userlogin).findViewById(R.id.icon_image) ;
+        ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
+            @Override
+            public void putBitmap(String url, Bitmap bitmap) {
+            }
 
+            @Override
+            public Bitmap getBitmap(String url) {
+                return null;
+            }
+        });
+        ImageLoader.ImageListener listener = ImageLoader.getImageListener(p,
+                R.drawable.ic_launcher,R.drawable.chahao);
+        imageLoader.get(myapp.getUser_avatar_url(), listener);
         initSetting();  //初始化用户设置列表
         RecyclerView recyclerView =(RecyclerView) findViewById(R.id.recycler_user) ;
         LinearLayoutManager layoutManager =new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false){
@@ -97,4 +121,6 @@ public class LoginedActivity extends AppCompatActivity {
             settingList.add(list7);
         }
     }
+
+
 }
