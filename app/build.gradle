@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.win10.personality_newsapp"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -35,7 +35,7 @@ dependencies {
     implementation 'fm.jiecao:jiecaovideoplayer:5.5'
     implementation'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.jaeger.statusbarutil:library:1.4.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
 }
 

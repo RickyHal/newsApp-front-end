@@ -78,3 +78,4 @@ public class CommentBean {
         this.news_item = news_item;
     }
 }
+

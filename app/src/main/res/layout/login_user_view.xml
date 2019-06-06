@@ -13,7 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <include layout="@layout/getedlogin"/>
+            <include
+                android:id="@+id/include_userlogin"
+                layout="@layout/getedlogin"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

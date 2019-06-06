@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
+import com.example.win10.personality_newsapp.user.Myapp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +64,8 @@ public class NewsDetailActivity extends Activity {
         requestQueue= Volley.newRequestQueue(this);
         datalist=new ArrayList<JSONObject>();
 
-        obtainData(newsid,"-1");
+        Myapp myapp = (Myapp)getApplication();
+        obtainData(newsid,myapp.getUser_id().toString());
 
 
     }

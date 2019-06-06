@@ -1,3 +1,4 @@
+
 package com.example.win10.personality_newsapp.showcomment;
 
 import android.app.Activity;
@@ -32,6 +33,7 @@ import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.comment.CommentBean;
 import com.example.win10.personality_newsapp.comment.CommentListAdapter;
+import com.example.win10.personality_newsapp.user.Myapp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,15 +53,26 @@ public class TestAddCommentActivity extends AppCompatActivity {
     RequestQueue requestQueue ;
     private boolean flag=true;
     private int position=-1;
-    private int ischecked=0;
     private List<CommentShowBean> list;
+    Myapp myapp;
 
-    private void checkiscollected(){
+    private void checkiscollected(String user_id){
+        try {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                "http://120.77.144.237/app/checkCollect/?user_id=1&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
+                "http://www.newsapp.club/app/checkCollect/?user_id="+user_id+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                try {
+                    ImageView imagestar=(ImageView)findViewById(R.id.check_Is_Checked);
+                    if(response.getInt("data")==1){
+                        imagestar.setImageResource(R.mipmap.yes_collection);
+                    }else{
+                        imagestar.setImageResource(R.mipmap.no_collection);
+                    }
 
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(),"网络异常",Toast.LENGTH_LONG).show();
+                }
             }
         }, new Response.ErrorListener(){
             @Override
@@ -67,7 +80,10 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"网络异常，请重试",Toast.LENGTH_LONG).show();
             }
         });
-
+        requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void putData(String news_id) {
@@ -110,6 +126,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_add_comment);
+        myapp = (Myapp)getApplication();
         final TextView textview=(TextView)findViewById(R.id.comment_text);
         final LinearLayout showstar=(LinearLayout)findViewById(R.id.show_star);
         final LinearLayout showinput=(LinearLayout)findViewById(R.id.show_input);
@@ -138,12 +155,9 @@ public class TestAddCommentActivity extends AppCompatActivity {
         sendcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
                 CommentShowBean commentitem=new CommentShowBean();
-//                commentitem.setNickname(user_partinfo.get("user_name"));
-//                commentitem.setHeadpictureurl(user_partinfo.get("user_avatar_url"));
-                commentitem.setNickname("罗东升"+"    回复");
-                commentitem.setHeadpictureurl("http://b-ssl.duitang.com/uploads/item/201708/22/20170822230245_rkCn4.jpeg");
+                commentitem.setNickname(myapp.getUser_name()+"    回复");
+                commentitem.setHeadpictureurl(myapp.getUser_avatar_url());
                 String reply_content="";
                 if(TestAddCommentActivity.this.flag){
                     reply_content=edittext.getText().toString();
@@ -157,7 +171,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 commentitem.setRelease_time(df.format(new Date()));
                 list.add(commentitem);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        "http://120.77.144.237/app/addComment/?_id="+String.valueOf(getIntent().getStringExtra("news_id"))+"&user_id="+"2"+
+                        "http://120.77.144.237/app/addComment/?_id="+String.valueOf(getIntent().getStringExtra("news_id"))+"&user_id="+myapp.getUser_id().toString()+
                                 "&comment_text="+reply_content, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -183,22 +197,42 @@ public class TestAddCommentActivity extends AppCompatActivity {
 
 
 //        添加收藏逻辑
-        checkiscollected();
-        if(ischecked==1){
-            imagestar.setImageResource(R.mipmap.yes_collection);
-        }else{
-            imagestar.setImageResource(R.mipmap.no_collection);
-        }
+       checkiscollected(myapp.getUser_id().toString());
+
+
         imagestar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(ischecked==1){
-                    imagestar.setImageResource(R.mipmap.no_collection);
-                    ischecked=0;
-                }else{
-                    imagestar.setImageResource(R.mipmap.yes_collection);
-                    ischecked=1;
+                try {
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            "http://120.77.144.237/app/collectNews/?user_id="+myapp.getUser_id().toString()+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Toast.makeText(getApplicationContext(),response.getString("data"),Toast.LENGTH_LONG).show();
+                                if(response.getString("data").equals("收藏成功")){
+                                    Toast.makeText(getApplicationContext(),"新闻收藏成功",Toast.LENGTH_LONG).show();
+                                    imagestar.setImageResource(R.mipmap.yes_collection);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"取消新闻收藏成功",Toast.LENGTH_LONG).show();
+                                    imagestar.setImageResource(R.mipmap.no_collection);
+                                }
+
+                            }catch (JSONException e){
+                                Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(),"网络异常",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+
         });
 
 
@@ -235,3 +269,5 @@ public class TestAddCommentActivity extends AppCompatActivity {
     }
 
 }
+
+
