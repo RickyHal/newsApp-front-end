@@ -14,7 +14,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.win10.personality_newsapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -25,10 +27,10 @@ public class MyAdapter extends BaseAdapter {
     LayoutInflater inflater;
     RequestQueue requestQueue;
 
-    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<news_item> list) {
-        this.inflater = LayoutInflater.from(context);
-        this.requestQueue = requestQueue;
-        this.list = list;
+    public MyAdapter(Context context,RequestQueue requestQueue,ArrayList<news_item> list) {
+        this.inflater=LayoutInflater.from(context);
+        this.requestQueue=requestQueue;
+        this.list=list;
     }
 
     public int getCount() {
@@ -47,15 +49,15 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.news_item, null);
-        TextView title = (TextView) view.findViewById(R.id.title);
-        TextView from = (TextView) view.findViewById(R.id.source);
-        TextView id = (TextView) view.findViewById(R.id.newsid);
-        TextView time = (TextView) view.findViewById(R.id.time);
-        TextView tag = (TextView) view.findViewById(R.id.tag);
-        NetworkImageView networkImageView1 = (NetworkImageView) view.findViewById(R.id.imageView1);
-        NetworkImageView networkImageView2 = (NetworkImageView) view.findViewById(R.id.imageView2);
-        NetworkImageView networkImageView3 = (NetworkImageView) view.findViewById(R.id.imageView3);
+        View view=inflater.inflate(R.layout.news_item,null);
+        TextView title=(TextView) view.findViewById(R.id.title);
+        TextView from=(TextView)view.findViewById(R.id.source);
+        TextView id=(TextView)view.findViewById(R.id.newsid);
+        TextView time=(TextView)view.findViewById(R.id.time);
+        TextView tag=(TextView)view.findViewById(R.id.tag);
+        NetworkImageView networkImageView1=(NetworkImageView)view.findViewById(R.id.imageView1);
+        NetworkImageView networkImageView2=(NetworkImageView)view.findViewById(R.id.imageView2);
+        NetworkImageView networkImageView3=(NetworkImageView)view.findViewById(R.id.imageView3);
         /*ImageView imageView1=view.findViewById(R.id.imageView1);
         ImageView imageView2=view.findViewById(R.id.imageView2);
         ImageView imageView3=view.findViewById(R.id.imageView3);*/
@@ -66,33 +68,32 @@ public class MyAdapter extends BaseAdapter {
         /*title.setText("测试");
         from.setText("测试");
         id.setText("测试");*/
-        Random random = new Random();
-        int min = random.nextInt(59) + 1;
-        time.setText(min + "分钟前");
+        String nowtime=list.get(position).getTimestamp();//某个时间戳;
+        long now=Long.parseLong(nowtime);
+        Date date=new Date(now*1000);
+        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        String nowDateString=format.format(date);
+
+        String day=nowDateString.split(" ")[0];
+        time.setText(day);
         /*imageView1.setImageResource(R.drawable.loading_0);
         imageView2.setImageResource(R.drawable.loading_1);
         imageView3.setImageResource(R.drawable.loading_2);*/
-        int syc = 0;
-        for (int i = 0; i < list.get(position).getImg().size(); i++) {
-            if (i < 3) {
-                syc = 1;
-                String url = list.get(position).getImg().get(i);
-                switch (i) {
-                    case 0:
-                        networkImageLoad(url, networkImageView1);
-                        break;
-                    case 1:
-                        networkImageLoad(url, networkImageView2);
-                        break;
-                    case 2:
-                        networkImageLoad(url, networkImageView3);
-                        break;
+        int syc=0;
+        for (int i=0;i<list.get(position).getImg().size();i++){
+            if(i<3){
+                syc=1;
+                String url=list.get(position).getImg().get(i);
+                switch (i){
+                    case 0:networkImageLoad(url,networkImageView1);break;
+                    case 1:networkImageLoad(url,networkImageView2);break;
+                    case 2:networkImageLoad(url,networkImageView3);break;
                 }
 
-            } else
+            }else
                 break;
         }
-        if (syc == 0) {
+        if (syc==0){
             networkImageView1.setAdjustViewBounds(true);
             networkImageView1.setMaxHeight(10);
             networkImageView2.setAdjustViewBounds(true);
@@ -102,8 +103,7 @@ public class MyAdapter extends BaseAdapter {
         }
         return view;
     }
-
-    public void networkImageLoad(String imageurl, NetworkImageView networkImageView) {
+    public void networkImageLoad(String imageurl,NetworkImageView networkImageView){
 
         //创建一个ImageLoader
         ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {

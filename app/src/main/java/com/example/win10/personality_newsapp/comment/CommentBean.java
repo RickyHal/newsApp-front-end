@@ -7,21 +7,29 @@ public class CommentBean {
     private String comment_content;
     private String news_item;
     private int _id;
+    private long new_id;
 
 
 
-    public CommentBean(String headpictureurl, String nickname, String release_time, String comment_content, String news_item, int _id) {
+    public CommentBean(String headpictureurl, String nickname, String release_time, String comment_content, String news_item, int _id, long new_id) {
         this.headpictureurl = headpictureurl;
         this.nickname = nickname;
         this.release_time = release_time;
         this.comment_content = comment_content;
         this.news_item = news_item;
         this._id = _id;
+        this.new_id = new_id;
     }
 
     public CommentBean() {
     }
+    public long getNew_id() {
+        return new_id;
+    }
 
+    public void setNew_id(long new_id) {
+        this.new_id = new_id;
+    }
     public int get_id() {
         return _id;
     }
@@ -70,3 +78,4 @@ public class CommentBean {
         this.news_item = news_item;
     }
 }
+

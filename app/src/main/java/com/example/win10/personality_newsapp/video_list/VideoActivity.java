@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -16,7 +17,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.MainActivity;
 import com.example.win10.personality_newsapp.R;
-import com.example.win10.personality_newsapp.video_detail.VideoDetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,34 +24,43 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class VideoActivity  extends AppCompatActivity implements LoadListView.ILoadListerner{
+public class VideoActivity extends AppCompatActivity implements LoadListView.ILoadListerner {
     public static ArrayList<VideoItem> videoList;
     MyAdapter myAdapter;
-    RequestQueue requestQueue ;
+    RequestQueue requestQueue;
     LoadListView lv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        lv=(LoadListView) findViewById(R.id.list);
+        Button top=(Button) findViewById(R.id.toTop);
+        lv = (LoadListView) findViewById(R.id.list);
         lv.setInterface(this);
-        requestQueue= Volley.newRequestQueue(this);
-        videoList= new ArrayList<VideoItem>();
-        RequestsData();
-        myAdapter=new MyAdapter(this,requestQueue,videoList,this);
-        lv.setAdapter(myAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        top.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 给bnt1添加点击响应事件
-                Intent intent =new Intent(VideoActivity.this, VideoDetailActivity.class);
-                intent.putExtra("video",videoList.get(position));
-                //启动
-                startActivity(intent);
+            public void onClick(View v) {
+                lv.setSelection(0);
             }
         });
+        requestQueue = Volley.newRequestQueue(this);
+        videoList = new ArrayList<VideoItem>();
+        RequestsData();
+        myAdapter = new MyAdapter(this, requestQueue, videoList, this, lv);
+        lv.setAdapter(myAdapter);
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // 给bnt1添加点击响应事件
+//                Intent intent =new Intent(VideoActivity.this, VideoDetailActivity.class);
+//                intent.putExtra("video",videoList.get(position));
+//                //启动
+//                startActivity(intent);
+//            }
+//        });
     }
-    public void  RequestsData(){
+
+    public void RequestsData() {
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -61,11 +70,11 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                     try {
                         JSONArray data = response.getJSONArray("data");
-                        Integer code= (Integer)response.get("code");
-                        if (code==0){
-                            for (int i=0;i<6;i++){
-                                VideoItem vi=new VideoItem();
-                                JSONObject item=data.getJSONObject(i);
+                        Integer code = (Integer) response.get("code");
+                        if (code == 0) {
+                            for (int i = 0; i < 10; i++) {
+                                VideoItem vi = new VideoItem();
+                                JSONObject item = data.getJSONObject(i);
                                 vi.set_id(item.getString("_id"));
                                 vi.setTitle(item.getString("title"));
                                 vi.setFrom(item.getString("from"));
@@ -77,15 +86,15 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
 
                         }
                         myAdapter.notifyDataSetChanged();
-                    }catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }, new Response.ErrorListener(){
+            }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "获取失败", Toast.LENGTH_LONG).show();
                 }
             });
             requestQueue.add(jsonObjectRequest);
@@ -93,18 +102,20 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
             e.printStackTrace();
         }
     }
+
     @Override
     public void onload() {
-        Handler handler=new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 loadMoreData();
                 lv.LoadingComplete();
             }
-        },1000);
+        }, 1000);
 
     }
+
     public void loadMoreData() {
 
         try {
@@ -116,11 +127,11 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                     try {
                         JSONArray data = response.getJSONArray("data");
-                        Integer code= (Integer)response.get("code");
-                        if (code==0){
-                            for (int i=0;i<6;i++){
-                                VideoItem vi=new VideoItem();
-                                JSONObject item=data.getJSONObject(i);
+                        Integer code = (Integer) response.get("code");
+                        if (code == 0) {
+                            for (int i = 0; i < 6; i++) {
+                                VideoItem vi = new VideoItem();
+                                JSONObject item = data.getJSONObject(i);
                                 vi.set_id(item.getString("_id"));
                                 vi.setTitle(item.getString("title"));
                                 vi.setFrom(item.getString("from"));
@@ -131,15 +142,15 @@ public class VideoActivity  extends AppCompatActivity implements LoadListView.IL
                             }
                         }
                         myAdapter.notifyDataSetChanged();
-                    }catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }, new Response.ErrorListener(){
+            }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "获取失败", Toast.LENGTH_LONG).show();
                 }
             });
             requestQueue.add(jsonObjectRequest);

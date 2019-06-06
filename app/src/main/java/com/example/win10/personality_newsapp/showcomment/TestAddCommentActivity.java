@@ -1,6 +1,7 @@
 package com.example.win10.personality_newsapp.showcomment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.comment.CommentBean;
 import com.example.win10.personality_newsapp.comment.CommentListAdapter;
 
@@ -35,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +49,8 @@ import java.util.Map;
 public class TestAddCommentActivity extends AppCompatActivity {
     CommentShowAdapter commentShowAdapter;
     RequestQueue requestQueue ;
+    private boolean flag=true;
+    private int position=-1;
     private int ischecked=1;
     private List<CommentShowBean> list;
     private void putData(String news_id) {
@@ -60,7 +66,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                             for (int i=0;i<data.length();i++){
                                 CommentShowBean commentitem=new CommentShowBean();
                                 JSONObject item=data.getJSONObject(i);
-                                commentitem.setNickname(item.getString("user_name"));
+                                commentitem.setNickname(item.getString("user_name")+"    回复");
                                 commentitem.setHeadpictureurl(item.getString("user_avatar_url"));
                                 commentitem.setComment_content(item.getString("comment_text"));
                                 commentitem.setRelease_time(item.getString("comment_time"));
@@ -101,23 +107,45 @@ public class TestAddCommentActivity extends AppCompatActivity {
         listview.setAdapter(commentShowAdapter);
         listview.setEmptyView((TextView)findViewById(R.id.comentnovalue));
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TestAddCommentActivity.this.flag=false;
+                TestAddCommentActivity.this.position=position;
+                textview.callOnClick();
+                edittext.setHint("回复"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]);
+            }
+        });
+
         sendcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+//                HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
                 CommentShowBean commentitem=new CommentShowBean();
-                commentitem.setNickname(user_partinfo.get("user_name"));
-                commentitem.setHeadpictureurl(user_partinfo.get("user_avatar_url"));
-                commentitem.setComment_content(edittext.getText().toString());
+//                commentitem.setNickname(user_partinfo.get("user_name"));
+//                commentitem.setHeadpictureurl(user_partinfo.get("user_avatar_url"));
+                commentitem.setNickname("罗东升"+"    回复");
+                commentitem.setHeadpictureurl("http://b-ssl.duitang.com/uploads/item/201708/22/20170822230245_rkCn4.jpeg");
+                String reply_content="";
+                if(TestAddCommentActivity.this.flag){
+                    reply_content=edittext.getText().toString();
+                }else{
+                    reply_content=edittext.getText().toString()+"//@"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]
+                            +":"+list.get(TestAddCommentActivity.this.position).getComment_content();
+
+                }
+                commentitem.setComment_content(reply_content);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 commentitem.setRelease_time(df.format(new Date()));
                 list.add(commentitem);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         "http://120.77.144.237/app/addComment/?_id="+"304268009287"+"&user_id="+"1"+
-                                "&comment_text="+edittext.getText().toString(), null, new Response.Listener<JSONObject>() {
+                                "&comment_text="+reply_content, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(getBaseContext(), "发表成功", Toast.LENGTH_SHORT).show();
+                        TestAddCommentActivity.this.flag=true;
+                        TestAddCommentActivity.this.position=-1;
                         commentShowAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener(){
