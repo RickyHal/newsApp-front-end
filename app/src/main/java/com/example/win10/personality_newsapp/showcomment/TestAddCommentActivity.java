@@ -56,6 +56,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
     private List<CommentShowBean> list;
     Myapp myapp;
 
+//    判断该新闻是否已经被登录用户收藏
     private void checkiscollected(String user_id){
         try {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -86,6 +87,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
         }
     }
 
+//    获取本新闻内的所有评论
     private void putData(String news_id) {
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -140,8 +142,10 @@ public class TestAddCommentActivity extends AppCompatActivity {
         putData(String.valueOf(getIntent().getStringExtra("news_id")));
         commentShowAdapter=new CommentShowAdapter(this,requestQueue,list);
         listview.setAdapter(commentShowAdapter);
-        listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
 
+        listview.setEmptyView((TextView)findViewById(R.id.nocommentshow));
+
+//        回复点击事件处理
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -152,6 +156,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
             }
         });
 
+//        点击发送评论内容
         sendcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,9 +202,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
 
 
 //        添加收藏逻辑
-       checkiscollected(myapp.getUser_id().toString());
-
-
+        checkiscollected(myapp.getUser_id().toString());
         imagestar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -235,7 +238,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
 
         });
 
-
+//       点击弹出输入栏
         textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

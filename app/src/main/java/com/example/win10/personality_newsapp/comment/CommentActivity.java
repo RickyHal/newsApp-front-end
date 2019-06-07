@@ -3,6 +3,7 @@ package com.example.win10.personality_newsapp.comment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,6 +22,9 @@ import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.collection.CollectionActivity;
 import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +88,7 @@ public class CommentActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.mylist);
         requestQueue= Volley.newRequestQueue(this);
         list= new ArrayList<CommentBean>();
-        HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+        final HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
         putData(user_partinfo);
         commentListAdapter=new CommentListAdapter(this,requestQueue,list);
         listview.setAdapter(commentListAdapter);
@@ -138,6 +142,18 @@ public class CommentActivity extends AppCompatActivity {
             }
         });
 
+//        下拉刷新监听
+        final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_comment);
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+                CommentActivity.this.list.clear();
+                CommentActivity.this.commentListAdapter.notifyDataSetChanged();
+                putData(user_partinfo);
+                mRefreshLayout.finishRefresh();
+            }
+        });
 
 
 //       跳转监听

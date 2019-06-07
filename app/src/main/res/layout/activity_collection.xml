@@ -30,7 +30,14 @@
 
     </LinearLayout>
 
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout_collection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <ListView
         android:id="@+id/mylistview"
@@ -45,4 +52,6 @@
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
         android:text="没有数据哦"/>
+
+   </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

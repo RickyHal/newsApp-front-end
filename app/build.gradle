@@ -37,5 +37,10 @@ dependencies {
     implementation 'com.jaeger.statusbarutil:library:1.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
+
+//    smartrefreshlayout下拉刷新框架
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
+
 }
 
