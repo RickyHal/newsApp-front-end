@@ -55,8 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
           et_username = (EditText) findViewById(R.id.et_username);
           et_userpwd =(EditText)  findViewById(R.id.et_password);
           back=(ImageView) findViewById(R.id.login_back) ;
-        et_username.setText("1807915914@qq.com");
-        et_userpwd.setText("123");
           /*if(et_username.getText().toString()!=""){
               button.setColorFilter(0xD81B1B);
 
@@ -107,9 +105,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try {
             final String username1=username;
             final String pwd1=pwd;
-            final String tosaltusername = username + "i^(ur6dmfe2m!jfmmbi79um5p7=h$(#q9uq18_&+z31g3t+-05";
             // final String requestBody="user_email="+username+"&user_passwd="+pwd;
-           Log.d("test",pwd1);
+           //Log.d("test",pwd1);
             //JSONObject paramJsonObject = new JSONObject(params);
             StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,"http://120.77.144.237/app/logIn/",new Response.Listener<String>() {
                 @Override
