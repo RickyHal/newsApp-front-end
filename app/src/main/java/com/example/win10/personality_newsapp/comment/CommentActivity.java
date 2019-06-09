@@ -148,7 +148,9 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
-                CommentActivity.this.list.clear();
+                if(CommentActivity.this.list.size()>0){
+                    CommentActivity.this.list.clear();
+                }
                 CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                 putData(user_partinfo);
                 mRefreshLayout.finishRefresh();

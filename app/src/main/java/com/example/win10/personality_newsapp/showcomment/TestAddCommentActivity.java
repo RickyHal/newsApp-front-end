@@ -193,6 +193,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 });
                 requestQueue.add(jsonObjectRequest);
                 edittext.setText("");
+//                隐藏键盘
                 InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(edittext.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
                 commentShowAdapter.notifyDataSetChanged();
@@ -246,7 +247,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 showinput.setVisibility(View.VISIBLE);
                 edittext.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.showSoftInput(edittext, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(edittext, 0);
             }
         });
         sendcomment.setEnabled(false);

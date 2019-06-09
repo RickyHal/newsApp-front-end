@@ -38,8 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+
 
 public class NewsDetailActivity extends Activity {
 

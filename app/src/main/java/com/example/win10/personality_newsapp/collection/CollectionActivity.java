@@ -54,6 +54,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     SimpleAdapter simpleAdapter;
 
+//    时间戳转为具体时间
     private static String timestampToDate(long time) {
         if (time < 10000000000L) {
             time = time * 1000;
@@ -184,12 +185,14 @@ public class CollectionActivity extends AppCompatActivity {
 
             }
         });
-
+//下拉刷新事件
         final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_collection);
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                CollectionActivity.this.list.clear();
+                if(CollectionActivity.this.list.size()>0){
+                    CollectionActivity.this.list.clear();
+                }
                 CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
                 putData(getIntent().getStringExtra("user_id"));
                 mRefreshLayout.finishRefresh();

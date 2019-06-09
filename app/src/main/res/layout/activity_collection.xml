@@ -51,7 +51,7 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="没有数据哦"/>
+        android:text="没有收藏哦，赶紧去收藏您感兴趣的新闻吧"/>
 
    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
