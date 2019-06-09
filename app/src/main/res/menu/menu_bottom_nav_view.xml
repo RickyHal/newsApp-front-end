@@ -18,7 +18,7 @@
         android:id="@+id/item_bottom_3"
         android:enabled="true"
         android:icon="@mipmap/v_login"
-        android:title="未登录"
+        android:title="我的"
         app:showAsAction="ifRoom"/>
 
 

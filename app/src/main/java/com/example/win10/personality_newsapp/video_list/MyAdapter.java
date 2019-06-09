@@ -3,6 +3,7 @@ package com.example.win10.personality_newsapp.video_list;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,12 +30,12 @@ public class MyAdapter extends BaseAdapter {
     ArrayList<VideoItem> list;
     LayoutInflater inflater;
     RequestQueue requestQueue;
-    VideoActivity videoActivity;
+    FragmentActivity videoActivity;
     Handler handler = new Handler();
     JCVideoPlayerStandard jCVideoPlayer;
     int position=0;
     LoadListView lv;
-    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list,VideoActivity videoActivity,LoadListView lv) {
+    public MyAdapter(Context context, RequestQueue requestQueue, ArrayList<VideoItem> list, FragmentActivity videoActivity, LoadListView lv) {
         this.inflater = LayoutInflater.from(context);
         this.requestQueue = requestQueue;
         this.list = list;
