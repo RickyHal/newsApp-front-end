@@ -101,7 +101,9 @@ public class TestAddCommentActivity extends AppCompatActivity {
                             for (int i=0;i<data.length();i++){
                                 CommentShowBean commentitem=new CommentShowBean();
                                 JSONObject item=data.getJSONObject(i);
-                                if(myapp.getUser_id()==item.getInt("user_id")){
+                                if(myapp.getUser_id()==null){
+                                    commentitem.setNickname(item.getString("user_name"));
+                                }else if(myapp.getUser_id()==item.getInt("user_id")){
                                     commentitem.setNickname(item.getString("user_name"));
                                 }else{
                                     commentitem.setNickname(item.getString("user_name")+"    回复");
@@ -158,8 +160,8 @@ public class TestAddCommentActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TestAddCommentActivity.this.flag=false;
                 TestAddCommentActivity.this.position=position;
-//                判断当前行是否是自己的评论如果不是则无法点击进行回复
-                if(!TestAddCommentActivity.this.list.get(position).getNickname().equals(myapp.getUser_name())){
+//              先判断用户是否登录如果登录则判断当前行是否是自己的评论如果不是则无法点击进行回复
+               if(myapp.getUser_name()!=null&&!TestAddCommentActivity.this.list.get(position).getNickname().equals(myapp.getUser_name())){
                     textview.callOnClick();
                     edittext.setHint("回复"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]);
                 }
