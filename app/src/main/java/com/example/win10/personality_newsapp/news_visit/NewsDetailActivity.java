@@ -64,8 +64,11 @@ public class NewsDetailActivity extends Activity {
         datalist=new ArrayList<JSONObject>();
 
         Myapp myapp = (Myapp)getApplication();
-        obtainData(newsid,myapp.getUser_id().toString());
-
+        if(myapp.getUser_id()!=null){
+            obtainData(newsid,myapp.getUser_id().toString());
+        }else{
+            obtainData(newsid,"-1");
+        }
 
     }
     public void obtainData(String news_id,String user_id) {
@@ -182,8 +185,10 @@ public class NewsDetailActivity extends Activity {
         tag.setLayoutParams(text);
         TextView time=new TextView(NewsDetailActivity.this);
 
-        long now=Long.parseLong(newsitem.getTimestamp());
-        Date date=new Date(now*1000);
+        String stringdate =newsitem.getTimestamp();
+
+        Long timestamp = Long.parseLong(stringdate)*1000;
+        Date date = new Date(timestamp);
         SimpleDateFormat format=new SimpleDateFormat("MM月dd日 HH时");
         String nowDateString=format.format(date);
 
@@ -215,15 +220,8 @@ public class NewsDetailActivity extends Activity {
 
             }else if(con.getString("type").equals("image")){
                 NetworkImageView nv=new NetworkImageView(NewsDetailActivity.this);
-
-
-                if(con.has("imgurl")){
-                    String imgurl=con.getString("imgurl");
-                    networkImageLoad(imgurl,nv);
-                }else if(con.has("data")){
-                    String dataurl=con.getString("data");
-                    networkImageLoad(dataurl,nv);
-                }
+                String dataurl=con.getString("data");
+                networkImageLoad(dataurl,nv);
                 vg.addView(nv);
 
             }

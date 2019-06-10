@@ -30,6 +30,7 @@ import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.news_visit.News_Manifest;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
@@ -95,12 +96,21 @@ public class CollectionActivity extends AppCompatActivity {
                                     new String[]{"author","time","title"},
                                     new int[]{R.id.author,R.id.time,R.id.title});
                             listview.setAdapter(simpleAdapter);
-                            listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
+                            if (list.size() == 0)
+                            {
+                                findViewById(R.id.refreshLayout_collection).setVisibility(View.GONE);
+                                findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.VISIBLE);
+
+                            }else{
+                                findViewById(R.id.refreshLayout_collection).setVisibility(View.VISIBLE);
+                                findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.GONE);
+                            }
+//                            listview.setEmptyView((TextView)findViewById(R.id.collectionnovalue));
                         }else{
                             Toast.makeText(CollectionActivity.this.getApplicationContext(),"请求失败。",Toast.LENGTH_LONG).show();
                         }
                     }catch (JSONException e){
-                        Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"网络异常，请重试",Toast.LENGTH_LONG).show();
                     }
                 }
             }, new Response.ErrorListener(){
@@ -148,6 +158,14 @@ public class CollectionActivity extends AppCompatActivity {
                                     null, new Response.Listener<JSONObject>() {
                                 public void onResponse(JSONObject response) {
                                     Toast.makeText(getBaseContext(), "成功删除全部收藏", Toast.LENGTH_SHORT).show();
+                                    if (CollectionActivity.this.list.size() == 0)
+                                    {
+                                        findViewById(R.id.refreshLayout_collection).setVisibility(View.GONE);
+                                        findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.VISIBLE);
+                                    }else{
+                                        findViewById(R.id.refreshLayout_collection).setVisibility(View.VISIBLE);
+                                        findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.GONE);
+                                    }
                                 }
                             }, new Response.ErrorListener() {
                                 public void onErrorResponse(VolleyError error) {
@@ -185,19 +203,29 @@ public class CollectionActivity extends AppCompatActivity {
 
             }
         });
+
 //下拉刷新事件
         final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_collection);
+        final RefreshLayout mRefreshLayoutempty = findViewById(R.id.refreshLayout_collection_empty);
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if(CollectionActivity.this.list.size()>0){
-                    CollectionActivity.this.list.clear();
-                }
-                CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
                 putData(getIntent().getStringExtra("user_id"));
                 mRefreshLayout.finishRefresh();
             }
         });
+        mRefreshLayoutempty.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                if(CollectionActivity.this.list.size()>0){
+                    CollectionActivity.this.list.clear();
+                    CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+                }
+                putData(getIntent().getStringExtra("user_id"));
+                mRefreshLayoutempty.finishRefresh();
+            }
+        });
+
 //        每项的长按删除时间监听
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -213,6 +241,14 @@ public class CollectionActivity extends AppCompatActivity {
                                 null, new Response.Listener<JSONObject>() {
                             public void onResponse(JSONObject response) {
                                 Toast.makeText(getBaseContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                                if (CollectionActivity.this.list.size() == 0)
+                                {
+                                    findViewById(R.id.refreshLayout_collection).setVisibility(View.GONE);
+                                    findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.VISIBLE);
+                                }else{
+                                    findViewById(R.id.refreshLayout_collection).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.refreshLayout_collection_empty).setVisibility(View.GONE);
+                                }
                             }
                         }, new Response.ErrorListener() {
                             public void onErrorResponse(VolleyError error) {

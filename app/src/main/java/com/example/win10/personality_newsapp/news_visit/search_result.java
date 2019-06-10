@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.R;
+import com.example.win10.personality_newsapp.user.Myapp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +31,7 @@ public class search_result extends Activity implements LoadListView.ILoadListern
     LoadListView lv;
     String search;
 
+    Myapp myapp;
     MyAdapter myAdapter;
     RequestQueue requestQueue ;
 
@@ -58,11 +60,17 @@ public class search_result extends Activity implements LoadListView.ILoadListern
         Intent intent = getIntent();
         search= intent.getStringExtra("searchcontent");
 
-        obtainSearchData(search);
+        myapp = (Myapp)getApplication();
+        if(myapp.getUser_id()!=null){
+            obtainSearchData(search,myapp.getUser_id().toString());
+        }else{
+            obtainSearchData(search,"-1");
+        }
 
 
         myAdapter=new MyAdapter(this,requestQueue,newslist);
         lv.setAdapter(myAdapter);
+
 
 
 
@@ -79,7 +87,11 @@ public class search_result extends Activity implements LoadListView.ILoadListern
                if(newslist.size()<10){
                    Toast.makeText(getApplicationContext(),"没有更多了",Toast.LENGTH_LONG).show();
                }else{
-                   obtainSearchData(search);
+                   if(myapp!=null&&myapp.getUser_id().toString()!=null){
+                       obtainSearchData(search,myapp.getUser_id().toString());
+                   }else{
+                       obtainSearchData(search,"-1");
+                   }
                }
 
                 lv.LoadingComplete();
@@ -89,12 +101,12 @@ public class search_result extends Activity implements LoadListView.ILoadListern
 
 
 
-    public void obtainSearchData(String para) {
+    public void obtainSearchData(String para,String user_id) {
 
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/searchNews/?keyword="+para+"&user_id=-1", null, new Response.Listener<JSONObject>() {
+                    "http://120.77.144.237/app/searchNews/?keyword="+para+"&user_id="+user_id, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();

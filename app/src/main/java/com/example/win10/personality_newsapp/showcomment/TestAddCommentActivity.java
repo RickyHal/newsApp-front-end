@@ -101,7 +101,11 @@ public class TestAddCommentActivity extends AppCompatActivity {
                             for (int i=0;i<data.length();i++){
                                 CommentShowBean commentitem=new CommentShowBean();
                                 JSONObject item=data.getJSONObject(i);
-                                commentitem.setNickname(item.getString("user_name")+"    回复");
+                                if(myapp.getUser_id()==item.getInt("user_id")){
+                                    commentitem.setNickname(item.getString("user_name"));
+                                }else{
+                                    commentitem.setNickname(item.getString("user_name")+"    回复");
+                                }
                                 commentitem.setHeadpictureurl(item.getString("user_avatar_url"));
                                 commentitem.setComment_content(item.getString("comment_text"));
                                 commentitem.setRelease_time(item.getString("comment_time"));
@@ -138,21 +142,27 @@ public class TestAddCommentActivity extends AppCompatActivity {
         ListView listview = (ListView)findViewById(R.id.comment_display_item);
         requestQueue= Volley.newRequestQueue(this);
         list= new ArrayList<CommentShowBean>();
-
         putData(String.valueOf(getIntent().getStringExtra("news_id")));
         commentShowAdapter=new CommentShowAdapter(this,requestQueue,list);
         listview.setAdapter(commentShowAdapter);
-
         listview.setEmptyView((TextView)findViewById(R.id.nocommentshow));
-
+        if(myapp.getUser_id()==null){
+            showstar.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(),"无法发表评论，请先登录",Toast.LENGTH_LONG).show();
+        }else{
+            checkiscollected(myapp.getUser_id().toString());
+        }
 //        回复点击事件处理
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TestAddCommentActivity.this.flag=false;
                 TestAddCommentActivity.this.position=position;
-                textview.callOnClick();
-                edittext.setHint("回复"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]);
+//                判断当前行是否是自己的评论如果不是则无法点击进行回复
+                if(!TestAddCommentActivity.this.list.get(position).getNickname().equals(myapp.getUser_name())){
+                    textview.callOnClick();
+                    edittext.setHint("回复"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]);
+                }
             }
         });
 
@@ -161,7 +171,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CommentShowBean commentitem=new CommentShowBean();
-                commentitem.setNickname(myapp.getUser_name()+"    回复");
+                commentitem.setNickname(myapp.getUser_name());
                 commentitem.setHeadpictureurl(myapp.getUser_avatar_url());
                 String reply_content="";
                 if(TestAddCommentActivity.this.flag){
@@ -203,7 +213,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
 
 
 //        添加收藏逻辑
-        checkiscollected(myapp.getUser_id().toString());
+
         imagestar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -236,9 +246,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
         });
-
 //       点击弹出输入栏
         textview.setOnClickListener(new View.OnClickListener() {
             @Override

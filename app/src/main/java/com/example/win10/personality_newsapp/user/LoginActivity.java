@@ -60,7 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
           }*/
-
+        et_username.setText("944981730@qq.com");
+        et_userpwd.setText("123");
           button.setOnClickListener(this);
           back.setOnClickListener(this);
 

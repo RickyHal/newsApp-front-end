@@ -64,6 +64,14 @@ public class CommentActivity extends AppCompatActivity {
                                 list.add(commentitem);
                             }
                         }
+                        if (list.size() == 0)
+                        {
+                            findViewById(R.id.refreshLayout_comment).setVisibility(View.GONE);
+                            findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.VISIBLE);
+                        }else{
+                            findViewById(R.id.refreshLayout_comment).setVisibility(View.VISIBLE);
+                            findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.GONE);
+                        }
                         commentListAdapter.notifyDataSetChanged();
                     }catch (JSONException e){
                         Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
@@ -92,7 +100,9 @@ public class CommentActivity extends AppCompatActivity {
         putData(user_partinfo);
         commentListAdapter=new CommentListAdapter(this,requestQueue,list);
         listview.setAdapter(commentListAdapter);
-        listview.setEmptyView((TextView)findViewById(R.id.comentnovalue));//设置当ListView为空的时候显示text_tip "暂无数据"
+
+        //listview.setEmptyView((TextView)findViewById(R.id.comentnovalue));
+
         // 删除全部收藏记录
         Button deleteall=(Button)findViewById(R.id.deleteall_comment);
         deleteall.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +128,14 @@ public class CommentActivity extends AppCompatActivity {
                                     null, new Response.Listener<JSONObject>() {
                                 public void onResponse(JSONObject response) {
                                     Toast.makeText(getBaseContext(), "成功删除全部评论", Toast.LENGTH_SHORT).show();
+                                    if (CommentActivity.this.list.size() == 0)
+                                    {
+                                        findViewById(R.id.refreshLayout_comment).setVisibility(View.GONE);
+                                        findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.VISIBLE);
+                                    }else{
+                                        findViewById(R.id.refreshLayout_comment).setVisibility(View.VISIBLE);
+                                        findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.GONE);
+                                    }
                                 }
                             }, new Response.ErrorListener() {
                                 public void onErrorResponse(VolleyError error) {
@@ -144,16 +162,25 @@ public class CommentActivity extends AppCompatActivity {
 
 //        下拉刷新监听
         final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_comment);
+        final RefreshLayout mRefreshLayoutempty = findViewById(R.id.refreshLayout_comment_empty);
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
                 if(CommentActivity.this.list.size()>0){
                     CommentActivity.this.list.clear();
+                    CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                 }
-                CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                 putData(user_partinfo);
                 mRefreshLayout.finishRefresh();
+            }
+        });
+        mRefreshLayoutempty.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
+                putData(user_partinfo);
+                mRefreshLayoutempty.finishRefresh();
             }
         });
 
@@ -184,6 +211,14 @@ public class CommentActivity extends AppCompatActivity {
                                 null, new Response.Listener<JSONObject>() {
                             public void onResponse(JSONObject response) {
                                 Toast.makeText(getBaseContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                                if (CommentActivity.this.list.size() == 0)
+                                {
+                                    findViewById(R.id.refreshLayout_comment).setVisibility(View.GONE);
+                                    findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.VISIBLE);
+                                }else{
+                                    findViewById(R.id.refreshLayout_comment).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.refreshLayout_comment_empty).setVisibility(View.GONE);
+                                }
                             }
                         }, new Response.ErrorListener() {
                             public void onErrorResponse(VolleyError error) {

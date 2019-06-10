@@ -54,10 +54,7 @@
         <activity
             android:name=".user.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".user.userActivity"
@@ -68,6 +65,10 @@
             android:name=".news_visit.News_Manifest"
             android:theme="@style/AppTheme.NoActionBar">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".news_visit.NewsDetailActivity" />
         <activity android:name=".news_visit.Search_viewList" />

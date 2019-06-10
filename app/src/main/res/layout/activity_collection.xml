@@ -30,6 +30,7 @@
 
     </LinearLayout>
 
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout_collection"
         android:layout_width="match_parent"
@@ -44,6 +45,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
 
+   </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout_collection_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/collectionnovalue"
         android:layout_width="match_parent"
@@ -51,7 +62,8 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
-        android:text="没有收藏哦，赶紧去收藏您感兴趣的新闻吧"/>
+        android:text="你还没有收藏新闻哦"/>
 
-   </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 </LinearLayout>

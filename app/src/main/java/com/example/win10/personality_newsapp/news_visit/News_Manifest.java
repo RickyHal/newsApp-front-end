@@ -304,8 +304,10 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
                     "http://120.77.144.237/app/getNewsList/", null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                     try {
+
                         //newslist= new ArrayList<news_item>();
                         JSONArray data = response.getJSONArray("data");
                         Integer code= (Integer)response.get("code");
@@ -313,6 +315,7 @@ public class News_Manifest extends AppCompatActivity implements LoadListView.ILo
                             for (int i=0;i<data.length();i++){
                                 news_item newsitem=new news_item();
                                 JSONObject item=data.getJSONObject(i);
+                                Log.d("11",item.getString("imageurls"));
                                 newsitem.setFrom(item.getString("from"));
                                 newsitem.set_id(item.getString("_id"));
                                 newsitem.setTitle(item.getString("title"));

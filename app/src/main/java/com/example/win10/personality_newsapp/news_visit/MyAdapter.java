@@ -69,8 +69,9 @@ public class MyAdapter extends BaseAdapter {
         from.setText("测试");
         id.setText("测试");*/
         String nowtime=list.get(position).getTimestamp();//某个时间戳;
-        long now=Long.parseLong(nowtime);
-        Date date=new Date(now*1000);
+
+        Long timestamp = Long.parseLong(nowtime)*1000;
+        Date date = new Date(timestamp);
         SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
         String nowDateString=format.format(date);
 
