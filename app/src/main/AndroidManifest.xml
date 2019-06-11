@@ -25,6 +25,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".video_list.VideoActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
@@ -47,7 +49,15 @@
             android:name=".user.CollectionCommentMainActivity"
             android:label="@string/title_activity_collection_comment_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".user.LoginedActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -65,10 +75,7 @@
             android:name=".news_visit.News_Manifest"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".news_visit.NewsDetailActivity" />
         <activity android:name=".news_visit.Search_viewList" />

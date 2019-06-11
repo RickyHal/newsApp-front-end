@@ -2,13 +2,16 @@ package com.example.win10.personality_newsapp.user;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -28,6 +31,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+
 public class videoFragment extends Fragment implements LoadListView.ILoadListerner{
     public static ArrayList<VideoItem> videoList;
     MyAdapter myAdapter;
@@ -40,29 +46,90 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
         Button top=(Button)view.findViewById(R.id.toTop);
         lv = (LoadListView) view.findViewById(R.id.list);
         lv.setInterface(this);
+        JCVideoPlayerStandard.releaseAllVideos();
         top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lv.setSelection(0);
+                JCVideoPlayerStandard.releaseAllVideos();
+                lv.setSelection(1);
             }
         });
         requestQueue = Volley.newRequestQueue(getActivity());
-        videoList = new ArrayList<VideoItem>();
-        RequestsData();
+        videoList = new ArrayList<>();
+        RequestsData(false);
         myAdapter = new MyAdapter(getContext(), requestQueue, videoList, getActivity(), lv);
         lv.setAdapter(myAdapter);
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                Log.e("111111111111111111",KeyEvent.ACTION_DOWN+"  "+KeyEvent.ACTION_UP+"  "+KeyEvent.KEYCODE_BACK);
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK){
+                    JCVideoPlayerStandard.releaseAllVideos();
+                    return true;
+                }
+                if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
+                    if (JCVideoPlayer.backPress()) {
+                        JCVideoPlayerStandard.releaseAllVideos();
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
+            }
+        });
+    }
 
-    public void RequestsData() {
+    @Override
+    public void onPause() {
+        super.onPause();
+        JCVideoPlayerStandard.releaseAllVideos();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         try {
+            JCVideoPlayerStandard.releaseAllVideos();
+        } catch (Exception e) {
+        }
+    }
 
+    @Override
+    public void PullLoad() {
+        // 设置延时三秒获取时局，用于显示加载效果
+        JCVideoPlayerStandard.releaseAllVideos();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 这里处理请求返回的结果（这里使用模拟数据）
+                RequestsData(true);
+                // 更新数据
+                myAdapter.notifyDataSetChanged();
+                // 加载完毕
+                lv.LoadingComplete();
+            }
+        }, 400);
+
+    }
+    public void RequestsData(boolean isClean) {
+        try {
+            final boolean  isC=isClean;
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getVideoList/", null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                     try {
+                        if (isC) {
+                            videoList.clear();
+                            myAdapter.notifyDataSetChanged();
+                        }
                         JSONArray data = response.getJSONArray("data");
                         Integer code = (Integer) response.get("code");
                         if (code == 0) {

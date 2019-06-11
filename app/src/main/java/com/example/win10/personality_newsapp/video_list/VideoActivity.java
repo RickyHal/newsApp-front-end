@@ -24,6 +24,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+
 public class VideoActivity extends AppCompatActivity implements LoadListView.ILoadListerner {
     public static ArrayList<VideoItem> videoList;
     MyAdapter myAdapter;
@@ -34,7 +37,7 @@ public class VideoActivity extends AppCompatActivity implements LoadListView.ILo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        Button top=(Button) findViewById(R.id.toTop);
+        Button top = (Button) findViewById(R.id.toTop);
         lv = (LoadListView) findViewById(R.id.list);
         lv.setInterface(this);
         top.setOnClickListener(new View.OnClickListener() {
@@ -45,7 +48,7 @@ public class VideoActivity extends AppCompatActivity implements LoadListView.ILo
         });
         requestQueue = Volley.newRequestQueue(this);
         videoList = new ArrayList<VideoItem>();
-        RequestsData();
+        RequestsData(false);
         myAdapter = new MyAdapter(this, requestQueue, videoList, this, lv);
         lv.setAdapter(myAdapter);
 //        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,9 +63,58 @@ public class VideoActivity extends AppCompatActivity implements LoadListView.ILo
 //        });
     }
 
-    public void RequestsData() {
-        try {
+    @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (JCVideoPlayerStandard.backPress()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JCVideoPlayerStandard.releaseAllVideos();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            JCVideoPlayerStandard.releaseAllVideos();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void PullLoad() {
+        // 设置延时三秒获取时局，用于显示加载效果
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // 这里处理请求返回的结果（这里使用模拟数据）
+                RequestsData(true);
+                // 更新数据
+                myAdapter.notifyDataSetChanged();
+                // 加载完毕
+                lv.LoadingComplete();
+            }
+        }, 3000);
+
+    }
+
+    public void RequestsData(boolean isClean) {
+        try {
+            if (isClean) {
+                videoList = new ArrayList<>();
+            }
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getVideoList/", null, new Response.Listener<JSONObject>() {
                 @Override

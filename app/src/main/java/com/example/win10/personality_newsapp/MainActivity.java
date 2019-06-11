@@ -14,6 +14,8 @@ import com.example.win10.personality_newsapp.user.userActivity;
 import com.example.win10.personality_newsapp.user.userFragment;
 import com.example.win10.personality_newsapp.user.videoFragment;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onPageSelected(int i) {
-               if(menuItem!=null){
+                JCVideoPlayerStandard.releaseAllVideos();
+                if(menuItem!=null){
                    menuItem.setChecked(false);
                }else{
                    navigationView.getMenu().getItem(0).setChecked(false);
@@ -67,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.item_bottom_1:
+                    JCVideoPlayerStandard.releaseAllVideos();
                     viewPager.setCurrentItem(0);
                     return true;
                 case R.id.item_bottom_2:
                     viewPager.setCurrentItem(1);
                     return true;
                 case R.id.item_bottom_3:
+                    JCVideoPlayerStandard.releaseAllVideos();
                     viewPager.setCurrentItem(2);
                     return true;
                 default:
