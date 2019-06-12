@@ -100,5 +100,6 @@
     <string name="user_good">我的点赞</string>
     <string name="user_name">张大仙的250位小迷弟</string>
     <string name="user_history">浏览历史</string>
+    <string name="register_text">账户注册</string>
     <string name="title_activity_test_add_comment">TestAddCommentActivity</string>
 </resources>

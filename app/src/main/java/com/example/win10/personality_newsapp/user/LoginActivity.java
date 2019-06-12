@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.MainActivity;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.news_visit.news_item;
 
@@ -94,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }*/
                 break;
             case R.id.login_back:
-                Intent intent1=new Intent(LoginActivity.this,userActivity.class);
+                Intent intent1=new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent1);
                 break;
             default:
@@ -140,8 +141,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             dialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent=new Intent(LoginActivity.this,LoginedActivity.class);
+                                    Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
+
                                 }
                             });
                             dialog.create();
