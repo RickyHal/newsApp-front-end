@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,22 +23,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".video_list.VideoActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".showcomment.TestAddCommentActivity"
             android:label="@string/title_activity_test_add_comment"
@@ -54,16 +42,23 @@
             android:name=".user.CollectionCommentMainActivity"
             android:label="@string/title_activity_collection_comment_main"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".user.LoginedActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".user.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" >
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+
         </activity>
         <activity
             android:name=".user.userActivity"
@@ -73,6 +68,7 @@
         <activity
             android:name=".news_visit.News_Manifest"
             android:theme="@style/AppTheme.NoActionBar">
+
 
         </activity>
         <activity android:name=".news_visit.NewsDetailActivity" />

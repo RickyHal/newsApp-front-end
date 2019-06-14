@@ -27,7 +27,8 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+        <!--<fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard-->
+        <com.example.win10.personality_newsapp.video_list.JzvdStdVolumeAfterFullscreen
             android:id="@+id/videoView"
             android:layout_width="match_parent"
             android:layout_height="250dp"
