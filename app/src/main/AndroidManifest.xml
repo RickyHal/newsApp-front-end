@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.win10.personality_newsapp">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--<uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.WRITE_SETTINGS" /> -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -15,22 +14,31 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+
     <application
+        android:name=".user.Myapp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".user.Myapp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".video_list.VideoActivity"
-            android:theme="@style/AppTheme.NoActionBar">
 
-        </activity>
+
+
+
+        <activity android:name=".user.ModifyPwdActivity"></activity>
+        <activity
+            android:name=".user.SystemSettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".user.ModifyUserinfoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
         <activity
             android:name=".showcomment.TestAddCommentActivity"
             android:label="@string/title_activity_test_add_comment"
@@ -47,6 +55,7 @@
             android:name=".user.CollectionCommentMainActivity"
             android:label="@string/title_activity_collection_comment_main"
             android:theme="@style/AppTheme.NoActionBar" />
+<<<<<<< HEAD
         <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -71,14 +80,42 @@
             android:theme="@style/AppTheme.NoActionBar">
 
 
+=======
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+>>>>>>> cb5c79ed3f782bdb6b63335e5ceef7b86f5bd1c1
         </activity>
+        <activity
+            android:name=".user.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".news_visit.News_Manifest"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".news_visit.NewsDetailActivity" />
         <activity android:name=".news_visit.Search_viewList" />
-        <activity android:name=".news_visit.search_result"></activity>
+        <activity android:name=".news_visit.search_result" />
         <activity
             android:name=".user.RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <provider
+            android:authorities="com.example.camera.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths"/>
+    </provider>
     </application>
 
 </manifest>

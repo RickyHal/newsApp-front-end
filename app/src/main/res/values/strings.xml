@@ -100,5 +100,15 @@
     <string name="user_good">我的点赞</string>
     <string name="user_name">张大仙的250位小迷弟</string>
     <string name="user_history">浏览历史</string>
+    <string name="register_text">账户注册</string>
+    <string name="modify_userinfo">编辑资料</string>
+    <string name="modify_pwd">修改密码</string>
+    <string name="exit_login">退出登录</string>
+    <string name="modifying_pic_text">头像</string>
+    <string name="modifying_nickname_text">用户名</string>
+    <string name="modifying_introduce_text">介绍</string>
+    <string name="modifying_sex_text">性别</string>
+    <string name="modifying_birth_text">生日</string>
+    <string name="modifying_area_text">地区</string>
     <string name="title_activity_test_add_comment">TestAddCommentActivity</string>
 </resources>

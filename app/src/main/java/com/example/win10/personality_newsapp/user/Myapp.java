@@ -10,6 +10,7 @@ public class Myapp extends Application {
     public String user_location;
     public Integer user_gender;
     public String user_avatar_url;
+    private String user_introduce;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,6 +70,14 @@ public class Myapp extends Application {
 
     public void setUser_avatar_url(String user_avatar_url) {
         this.user_avatar_url = user_avatar_url;
+    }
+
+    public String getUser_introduce() {
+        return user_introduce;
+    }
+
+    public void setUser_introduce(String user_introduce) {
+        this.user_introduce = user_introduce;
     }
 
     public Myapp() {

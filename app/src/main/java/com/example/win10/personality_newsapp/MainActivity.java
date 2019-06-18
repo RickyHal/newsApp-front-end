@@ -1,23 +1,30 @@
 package com.example.win10.personality_newsapp;
 
-import android.app.LocalActivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.win10.personality_newsapp.user.Myapp;
 import com.example.win10.personality_newsapp.user.ViewpagerAdapter;
 import com.example.win10.personality_newsapp.user.homeFragment;
-import com.example.win10.personality_newsapp.user.userActivity;
+import com.example.win10.personality_newsapp.user.loginedFragment;
 import com.example.win10.personality_newsapp.user.userFragment;
 import com.example.win10.personality_newsapp.user.videoFragment;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MenuItem menuItem;
+    private  Boolean back1=false;
+    Myapp myapp;
+    long exitTime=0;
     private BottomNavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
                if(menuItem!=null){
                    menuItem.setChecked(false);
                }else{
+                   if(myapp.getUser_id()!=null){
+                       navigationView.getMenu().getItem(2).setChecked(false);
+                   }else{
                    navigationView.getMenu().getItem(0).setChecked(false);
+                   }
                }
                menuItem=navigationView.getMenu().getItem(i);
                menuItem.setChecked(true);
@@ -67,13 +78,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.item_bottom_1:
+                    JCVideoPlayerStandard.releaseAllVideos();
                     viewPager.setCurrentItem(0);
                     return true;
                 case R.id.item_bottom_2:
                     viewPager.setCurrentItem(1);
                     return true;
                 case R.id.item_bottom_3:
-                    viewPager.setCurrentItem(2);
+                    JCVideoPlayerStandard.releaseAllVideos();
+                        viewPager.setCurrentItem(2);
+
                     return true;
                 default:
                     break;
@@ -86,8 +100,43 @@ public class MainActivity extends AppCompatActivity {
         ViewpagerAdapter adapter = new ViewpagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new homeFragment());
         adapter.addFragment(new videoFragment());
-        adapter.addFragment(new userFragment());
+        userFragment userfragment=new userFragment();
+        adapter.addFragment(userfragment);
+         myapp=(Myapp)getApplication();
+        if(myapp.getUser_id()!=null){
+        adapter.addFragment(new loginedFragment());
+            adapter.delFragment(userfragment);
+
+        }
         viewPager.setAdapter(adapter);
+        if(myapp.getUser_id()!=null){
+        viewPager.setCurrentItem(2);
+        }
+        if(back1=getIntent().getBooleanExtra("back",false)){
+            viewPager.setCurrentItem(2);
+        }
+
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
+        {
+
+            if((System.currentTimeMillis()-exitTime) > 2000)  //System.currentTimeMillis()无论何时调用，肯定大于2000
+            {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序",Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            }
+            else
+            {
+                finish();
+                System.exit(0);
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+
+    }
 }

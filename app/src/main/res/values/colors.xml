@@ -13,4 +13,5 @@
     <color name="login_input_NO">#cdcdcd</color>
     <color name="colorCursor">#cccccc</color>
     <color name="colortitleblue">#0388fd</color>
+    <color name="bg_toast">#CC000000</color>
 </resources>

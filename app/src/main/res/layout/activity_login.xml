@@ -137,10 +137,18 @@
         android:layout_below="@id/rl_userpwd"
         android:layout_marginTop="25dp"
         android:src="@drawable/ic_login"
-        android:tint="@color/login_input_NO"
+        android:tint="@color/colortitleblue"
         />
 
-
+    <TextView
+        android:id="@+id/btn_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_text"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"/>
 
 
 </RelativeLayout>
