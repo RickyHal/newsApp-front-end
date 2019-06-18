@@ -180,7 +180,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                     reply_content=edittext.getText().toString();
                 }else{
                     reply_content=edittext.getText().toString()+"//@"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]
-                            +":"+list.get(TestAddCommentActivity.this.position).getComment_content();
+                            +":"+list.get(TestAddCommentActivity.this.position).getComment_content().split("//@")[0];
 
                 }
                 commentitem.setComment_content(reply_content);

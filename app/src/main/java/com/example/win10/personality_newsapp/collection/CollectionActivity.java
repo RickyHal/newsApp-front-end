@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -52,7 +53,7 @@ import java.util.Map;
 
 public class CollectionActivity extends AppCompatActivity {
     private List<Map<String,Object>> list;
-
+    private int page=10;
     SimpleAdapter simpleAdapter;
 
 //    时间戳转为具体时间
@@ -69,7 +70,6 @@ public class CollectionActivity extends AppCompatActivity {
         final List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         try {
             RequestQueue requestQueue= Volley.newRequestQueue(this);
-            Log.d("22","http://120.77.144.237/app/getCollectRec/?user_id="+user_id);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     "http://120.77.144.237/app/getCollectRec/?user_id="+user_id, null, new Response.Listener<JSONObject>() {
                 @Override
@@ -187,6 +187,56 @@ public class CollectionActivity extends AppCompatActivity {
                 }
                 bb.setTitle("提示");
                 bb.show();
+            }
+        });
+
+//        上拉滚动加载更多
+        listview.setOnScrollListener(new AbsListView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    // 判断是否滚动到底部
+                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+//                        Toast.makeText(getBaseContext(), "下拉到了底部", Toast.LENGTH_SHORT).show();
+                        RequestQueue requestQueue= Volley.newRequestQueue(CollectionActivity.this);
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                "http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id")+"&?page="+CollectionActivity.this.page,
+                                null, new Response.Listener<JSONObject>() {
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray data = response.getJSONArray("data");
+                                    Integer code = (Integer) response.get("code");
+                                    if (code == 0||data.length()!=0) {
+                                        for (int i = 0; i < data.length(); i++) {
+                                            JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+                                            Map<String, Object> map = new HashMap<String, Object>();
+                                            map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
+                                            map.put("time", timestampToDate(oneitem.getLong("timestamp")));
+                                            map.put("title", oneitem.getString("title"));
+                                            map.put("_id", oneitem.getLong("_id"));
+                                            CollectionActivity.this.list.add(map);
+                                        }
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), "没有更多数据了", Toast.LENGTH_LONG).show();
+                                    }
+                                    CollectionActivity.this.page++;
+                                } catch (JSONException e) {
+                                    Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        requestQueue.add(jsonObjectRequest);
+                        simpleAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
 
