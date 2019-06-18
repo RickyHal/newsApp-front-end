@@ -39,7 +39,7 @@ public class CommentActivity extends AppCompatActivity {
     private List<CommentBean> list;
     CommentListAdapter commentListAdapter;
     RequestQueue requestQueue ;
-
+    private int page=1;
     private void putData(final HashMap<String, String> user_partinfo){
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -172,6 +172,7 @@ public class CommentActivity extends AppCompatActivity {
                     CommentActivity.this.commentListAdapter.notifyDataSetChanged();
                 }
                 putData(user_partinfo);
+                CommentActivity.this.page=1;
                 mRefreshLayout.finishRefresh();
             }
         });
@@ -180,7 +181,59 @@ public class CommentActivity extends AppCompatActivity {
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 HashMap<String, String> user_partinfo=(HashMap<String,String>)getIntent().getSerializableExtra("user_partinfo");
                 putData(user_partinfo);
+                CommentActivity.this.page=1;
                 mRefreshLayoutempty.finishRefresh();
+            }
+        });
+
+//        上拉刷新获取更多监听
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                try {
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            "http://120.77.144.237/app/getComment/?user_id="+user_partinfo.get("user_id")+"&page="+CommentActivity.this.page, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray data = response.getJSONArray("data");
+                                Integer code= (Integer)response.get("code");
+                                if (code==0&&data.length()>0){
+                                    for (int i=0;i<data.length();i++){
+                                        CommentBean commentitem=new CommentBean();
+                                        JSONObject item=data.getJSONObject(i);
+                                        commentitem.setNickname(user_partinfo.get("user_name"));
+                                        commentitem.setHeadpictureurl(user_partinfo.get("user_avatar_url"));
+                                        commentitem.setComment_content(item.getString("comment_text"));
+                                        commentitem.setRelease_time(item.getString("comment_time"));
+                                        commentitem.setNews_item("@"+item.getJSONArray("news_info").getJSONObject(0).getString("from")
+                                                +":"+item.getJSONArray("news_info").getJSONObject(0).getString("title"));
+                                        commentitem.setNew_id(item.getJSONArray("news_info").getJSONObject(0).getLong("_id"));
+                                        commentitem.set_id(item.getInt("comment_id"));
+                                        list.add(commentitem);
+                                    }
+                                    commentListAdapter.notifyDataSetChanged();
+                                    CommentActivity.this.page++;
+                                    mRefreshLayout.finishLoadMore();
+                                }else {
+                                    mRefreshLayout.setNoMoreData(true);
+                                    mRefreshLayout.finishLoadMore();
+                                }
+
+                            }catch (JSONException e){
+                                Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    requestQueue.add(jsonObjectRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

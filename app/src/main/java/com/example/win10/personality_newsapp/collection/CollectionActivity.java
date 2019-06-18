@@ -33,6 +33,7 @@ import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.news_visit.News_Manifest;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONArray;
@@ -53,7 +54,7 @@ import java.util.Map;
 
 public class CollectionActivity extends AppCompatActivity {
     private List<Map<String,Object>> list;
-    private int page=10;
+    private int page=1;
     SimpleAdapter simpleAdapter;
 
 //    时间戳转为具体时间
@@ -191,54 +192,54 @@ public class CollectionActivity extends AppCompatActivity {
         });
 
 //        上拉滚动加载更多
-        listview.setOnScrollListener(new AbsListView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                    // 判断是否滚动到底部
-                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
-//                        Toast.makeText(getBaseContext(), "下拉到了底部", Toast.LENGTH_SHORT).show();
-                        RequestQueue requestQueue= Volley.newRequestQueue(CollectionActivity.this);
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                "http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id")+"&?page="+CollectionActivity.this.page,
-                                null, new Response.Listener<JSONObject>() {
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    JSONArray data = response.getJSONArray("data");
-                                    Integer code = (Integer) response.get("code");
-                                    if (code == 0||data.length()!=0) {
-                                        for (int i = 0; i < data.length(); i++) {
-                                            JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
-                                            Map<String, Object> map = new HashMap<String, Object>();
-                                            map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
-                                            map.put("time", timestampToDate(oneitem.getLong("timestamp")));
-                                            map.put("title", oneitem.getString("title"));
-                                            map.put("_id", oneitem.getLong("_id"));
-                                            CollectionActivity.this.list.add(map);
-                                        }
-                                    }else{
-                                        Toast.makeText(getApplicationContext(), "没有更多数据了", Toast.LENGTH_LONG).show();
-                                    }
-                                    CollectionActivity.this.page++;
-                                } catch (JSONException e) {
-                                    Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        requestQueue.add(jsonObjectRequest);
-                        simpleAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
+//        listview.setOnScrollListener(new AbsListView.OnScrollListener(){
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    // 判断是否滚动到底部
+//                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+//                        RequestQueue requestQueue= Volley.newRequestQueue(CollectionActivity.this);
+//                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+//                                "http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id")+"&page="+CollectionActivity.this.page,
+//                                null, new Response.Listener<JSONObject>() {
+//                            public void onResponse(JSONObject response) {
+//                                try {
+//                                    JSONArray data = response.getJSONArray("data");
+//                                    Integer code = (Integer) response.get("code");
+//                                    if (code == 0&&data.length()>0) {
+//                                        for (int i = 0; i < data.length(); i++) {
+//                                            JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+//                                            Map<String, Object> map = new HashMap<String, Object>();
+//                                            map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
+//                                            map.put("time", timestampToDate(oneitem.getLong("timestamp")));
+//                                            map.put("title", oneitem.getString("title"));
+//                                            map.put("_id", oneitem.getLong("_id"));
+//                                            CollectionActivity.this.list.add(map);
+//                                        }
+//                                        CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+//                                        CollectionActivity.this.page=CollectionActivity.this.page+1;
+//                                    }else{
+//                                        Toast.makeText(getApplicationContext(), "没有更多数据了", Toast.LENGTH_LONG).show();
+//                                    }
+//                                } catch (JSONException e) {
+//                                    Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            public void onErrorResponse(VolleyError error) {
+//                                Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                        requestQueue.add(jsonObjectRequest);
+//
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
 
 
 //        每项的点击跳转事件监听
@@ -257,13 +258,16 @@ public class CollectionActivity extends AppCompatActivity {
 //下拉刷新事件
         final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_collection);
         final RefreshLayout mRefreshLayoutempty = findViewById(R.id.refreshLayout_collection_empty);
+//        正常情况下的下拉刷新
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 putData(getIntent().getStringExtra("user_id"));
+                CollectionActivity.this.page=1;
                 mRefreshLayout.finishRefresh();
             }
         });
+//        为了兼容listview在空不显示提示和smartrefresh刷新的情况
         mRefreshLayoutempty.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -272,7 +276,48 @@ public class CollectionActivity extends AppCompatActivity {
                     CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
                 }
                 putData(getIntent().getStringExtra("user_id"));
+                CollectionActivity.this.page=1;
                 mRefreshLayoutempty.finishRefresh();
+            }
+        });
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                RequestQueue requestQueue = Volley.newRequestQueue(CollectionActivity.this);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        "http://120.77.144.237/app/getCollectRec/?user_id=" + getIntent().getStringExtra("user_id") + "&page=" + CollectionActivity.this.page,
+                        null, new Response.Listener<JSONObject>() {
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray data = response.getJSONArray("data");
+                            Integer code = (Integer) response.get("code");
+                            if (code == 0 && data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
+                                    JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+                                    Map<String, Object> map = new HashMap<String, Object>();
+                                    map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
+                                    map.put("time", timestampToDate(oneitem.getLong("timestamp")));
+                                    map.put("title", oneitem.getString("title"));
+                                    map.put("_id", oneitem.getLong("_id"));
+                                    CollectionActivity.this.list.add(map);
+                                }
+                                CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+                                CollectionActivity.this.page = CollectionActivity.this.page + 1;
+                                mRefreshLayout.finishLoadMore();
+                            } else {
+                                mRefreshLayout.setNoMoreData(true);
+                                mRefreshLayout.finishLoadMore();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                requestQueue.add(jsonObjectRequest);
             }
         });
 
