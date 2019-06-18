@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:padding="6dp"
+    android:id="@+id/sys_setting"
     android:layout_marginStart="10dp"
     android:layout_marginLeft="10dp"
     >

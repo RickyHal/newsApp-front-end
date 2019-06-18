@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.win10.personality_newsapp"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -30,10 +30,11 @@ dependencies {
     //圆角ImageView依赖库
     implementation 'com.makeramen:roundedimageview:2.3.0'
     testImplementation 'junit:junit:4.12'
+    implementation 'liji.library.dev:citypickerview:0.7.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'fm.jiecao:jiecaovideoplayer:5.5'
-    implementation'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.jaeger.statusbarutil:library:1.4.0'
 
 
@@ -42,4 +43,3 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
 
 }
-

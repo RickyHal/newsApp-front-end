@@ -1,6 +1,5 @@
 package com.example.win10.personality_newsapp;
 
-import android.app.LocalActivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
@@ -14,7 +13,6 @@ import com.example.win10.personality_newsapp.user.Myapp;
 import com.example.win10.personality_newsapp.user.ViewpagerAdapter;
 import com.example.win10.personality_newsapp.user.homeFragment;
 import com.example.win10.personality_newsapp.user.loginedFragment;
-import com.example.win10.personality_newsapp.user.userActivity;
 import com.example.win10.personality_newsapp.user.userFragment;
 import com.example.win10.personality_newsapp.user.videoFragment;
 
@@ -24,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MenuItem menuItem;
+    private  Boolean back1=false;
     Myapp myapp;
     long exitTime=0;
     private BottomNavigationView navigationView;
@@ -113,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
         if(myapp.getUser_id()!=null){
         viewPager.setCurrentItem(2);
         }
+        if(back1=getIntent().getBooleanExtra("back",false)){
+            viewPager.setCurrentItem(2);
+        }
+
     }
 
     @Override

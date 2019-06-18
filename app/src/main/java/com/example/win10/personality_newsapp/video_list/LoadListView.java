@@ -141,7 +141,7 @@ public class LoadListView extends ListView implements AbsListView.OnScrollListen
 
             case MotionEvent.ACTION_MOVE:
                 int moveY = (int) ev.getY();
-                int paddingY = headHeight + (moveY - Yload) / 2-300;
+                int paddingY = headHeight + (moveY - Yload) / 2;
                 if (paddingY < 0) {
                     headtxt.setText("下拉刷新........");
                     progressBar.setVisibility(View.GONE);

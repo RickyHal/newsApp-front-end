@@ -1,5 +1,6 @@
 package com.example.win10.personality_newsapp.user;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
     TextView textView6;
     TextView textView7;
     TextView news_id;
+    static int recommendPage=0;
+    Myapp myapp;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         textView6.setTextColor(0xFF444444);
         textView7.setTextColor(0xFF444444);
         classification=0;
+        myapp=(Myapp) getActivity().getApplication();
         lv=(LoadListView) view.findViewById(R.id.list);
         lv.setInterface(this);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -138,6 +143,27 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 textView6.setTypeface(null, Typeface.NORMAL);
                 textView7.setTextColor(0xFF444444);
                 textView7.setTypeface(null, Typeface.NORMAL);
+                newslist.clear();
+                myAdapter.notifyDataSetChanged();
+                classification=1;
+                if(myapp.getUser_id()==null){
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setTitle("提示");
+                    builder.setMessage("请先登录！");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    //一样要show
+                    builder.show();
+                }else{
+                    recommendPage=0;
+                    obtainRecommendData(myapp.getUser_id().toString(),String.valueOf(recommendPage));
+                }
             }
         });
         textView3.setOnClickListener(new View.OnClickListener() {
@@ -351,7 +377,25 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
             public void run() {
                 switch (classification){
                     case 0:obtainMoreData();break;
-                    case 1:break;
+                    case 1:if(myapp.getUser_id()==null){
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        builder.setTitle("提示");
+                        builder.setMessage("请先登录！");
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        //一样要show
+                        builder.show();
+                    }else{
+                        recommendPage++;
+                        obtainMoreRecommendData(myapp.getUser_id().toString(),String.valueOf(recommendPage));
+                    }
+                            break;
                     case 2:obtainMoreClassifyData("科技");break;
                     case 3:obtainMoreClassifyData("体育");break;
                     case 4:obtainMoreClassifyData("娱乐");break;
@@ -504,6 +548,103 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                         //Toast.makeText(getApplicationContext(),"加载完成",Toast.LENGTH_LONG).show();
                     }catch (JSONException e){
                         Toast.makeText(getActivity().getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, new Response.ErrorListener(){
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getActivity().getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void obtainRecommendData(String userID,String page) {
+
+        try {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    "http://120.77.144.237/app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
+                    try {
+                        //newslist= new ArrayList<news_item>();
+                        JSONArray data = response.getJSONArray("data");
+                        Integer code= (Integer)response.get("code");
+                        if (code==0){
+                            for (int i=0;i<data.length();i++){
+                                news_item newsitem=new news_item();
+                                JSONObject item=data.getJSONObject(i);
+                                newsitem.setFrom(item.getString("from"));
+                                newsitem.set_id(item.getString("_id"));
+                                newsitem.setTitle(item.getString("title"));
+                                newsitem.setTag(item.getString("tag"));
+                                newsitem.setTimestamp(item.getString("timestamp"));
+                                JSONArray jsonArray = item.getJSONArray("imageurls");
+                                for(int j=0;j<jsonArray.length();j++){
+                                    newsitem.getImg().add((String)jsonArray.get(j));
+                                }
+                                newslist.add(newsitem);
+                            }
+
+                        }
+                        myAdapter.notifyDataSetChanged();
+
+                    }catch (JSONException e){
+                        Toast.makeText(getActivity().getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, new Response.ErrorListener(){
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getActivity().getApplicationContext(),"获取失败",Toast.LENGTH_LONG).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void obtainMoreRecommendData(String userID,String page) {
+
+        try {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    "http://120.77.144.237/app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
+                    try {
+                        //newslist= new ArrayList<news_item>();
+                        JSONArray data = response.getJSONArray("data");
+                        Integer code= (Integer)response.get("code");
+                        if (code==0){
+                            for (int i=0;i<data.length();i++){
+                                news_item newsitem=new news_item();
+                                JSONObject item=data.getJSONObject(i);
+                                newsitem.setFrom(item.getString("from"));
+                                newsitem.set_id(item.getString("_id"));
+                                newsitem.setTitle(item.getString("title"));
+                                newsitem.setTag(item.getString("tag"));
+                                newsitem.setTimestamp(item.getString("timestamp"));
+                                JSONArray jsonArray = item.getJSONArray("imageurls");
+                                for(int j=0;j<jsonArray.length();j++){
+                                    newsitem.getImg().add((String)jsonArray.get(j));
+                                }
+                                newslist.add(newsitem);
+                            }
+
+                        }
+                        myAdapter.notifyDataSetChanged();
+
+                    }catch (JSONException e){
+                        Toast.makeText(getActivity().getApplicationContext(),"已经到底了",Toast.LENGTH_LONG).show();
                     }
                 }
             }, new Response.ErrorListener(){

@@ -88,7 +88,7 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
         RequestsData(false);
         myAdapter = new MyAdapter(getContext(), requestQueue, videoList, getActivity(), lv);
         lv.setAdapter(myAdapter);
-         view.setOnTouchListener(new View.OnTouchListener() {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

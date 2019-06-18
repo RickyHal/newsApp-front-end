@@ -51,6 +51,7 @@ public class userFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         SettingAdapter adapter =new SettingAdapter(settingList);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(MyItemClickListener);
 
        /* //隐藏标题栏
         ActionBar actionbar=getSupportActionBar();
@@ -87,4 +88,26 @@ public class userFragment extends Fragment {
             settingList.add(list7);
         }
     }
+
+    private SettingAdapter.OnItemClickListener MyItemClickListener = new SettingAdapter.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(View v, int position) {
+            switch (v.getId()) {
+                case R.id.sys_setting:
+                    //对item进行判断如果是第一个那么我们进行跳转反之则提示消息
+                    if(position==0) {//这里position用于判断item是第几个条目然后我们对其设置就可以跳转了。
+                        Intent intent = new Intent(getActivity(),SystemSettingActivity.class);
+                        startActivity(intent);
+                    }
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View v) {
+
+        }
+
+
+    };
 }

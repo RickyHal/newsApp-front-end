@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -32,15 +35,16 @@ public class loginedFragment extends Fragment {
     private List<Setting> settingList=new ArrayList<>();
     private DividerItemDecoration mDividerItemDecoration;
     RequestQueue requestQueue;
+    private SettingAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(),R.layout.login_user_view,null);
          myapp = (Myapp)getActivity().getApplication();
         requestQueue= Volley.newRequestQueue(getActivity());
-        TextView nickname=(TextView) view.findViewById(R.id.include_userlogin ).findViewById(R.id.user_name);
+        TextView nickname=(TextView) view.findViewById(R.id.user_name);
         nickname.setText(myapp.getUser_name());
-        CircleImageView p=(CircleImageView) view.findViewById(R.id.include_userlogin).findViewById(R.id.icon_image) ;
+        CircleImageView p=(CircleImageView) view.findViewById(R.id.icon_image) ;
         ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
@@ -65,8 +69,9 @@ public class loginedFragment extends Fragment {
         mDividerItemDecoration=new DividerItemDecoration(recyclerView.getContext(),layoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
         recyclerView.setLayoutManager(layoutManager);
-        SettingAdapter adapter =new SettingAdapter(settingList);
+       adapter =new SettingAdapter(settingList);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(MyItemClickListener);
         TextView mycomment=(TextView)view.findViewById(R.id.my_comment);
         mycomment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,5 +127,28 @@ public class loginedFragment extends Fragment {
             settingList.add(list7);
         }
     }
+
+    private SettingAdapter.OnItemClickListener MyItemClickListener = new SettingAdapter.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(View v, int position) {
+            switch (v.getId()) {
+                case R.id.sys_setting:
+                    //对item进行判断如果是第一个那么我们进行跳转反之则提示消息
+                    if(position==0) {//这里position用于判断item是第几个条目然后我们对其设置就可以跳转了。
+                        Intent intent = new Intent(getActivity(),SystemSettingActivity.class);
+                        intent.putExtra("login_setting",1);
+                        startActivity(intent);
+                    }
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View v) {
+
+        }
+
+
+    };
 
 }
