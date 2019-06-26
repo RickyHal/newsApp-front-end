@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.MainActivity;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.news_visit.LoadListView;
 import com.example.win10.personality_newsapp.news_visit.MyAdapter;
@@ -54,12 +55,19 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
     TextView textView7;
     TextView news_id;
     static int recommendPage=0;
+    static int newsPage=0;
+    static int tecnologyPage=0;
+    static int economyPage=0;
+    static int entertainPage=0;
+    static int sportPage=0;
+    static int militaryPage=0;
     Myapp myapp;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //View view = inflater.inflate(R.layout.news_main,container,false);
         View view = View.inflate(getActivity(),R.layout.news_main,null);
+
         search_bar=view.findViewById(R.id.search);
         textView1=view.findViewById(R.id.text1);
         textView2=view.findViewById(R.id.text2);
@@ -79,6 +87,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         textView7.setTextColor(0xFF444444);
         classification=0;
         myapp=(Myapp) getActivity().getApplication();
+
         lv=(LoadListView) view.findViewById(R.id.list);
         lv.setInterface(this);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,7 +105,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         requestQueue= Volley.newRequestQueue(getActivity());
         newslist= new ArrayList<news_item>();
 
-        obtainData();
+        obtainData(newsPage);
 
 
         myAdapter=new MyAdapter(getActivity(),requestQueue,newslist);
@@ -122,7 +131,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=0;
-                obtainData();
+                newsPage=0;
+                obtainData(newsPage);
 
             }
         });
@@ -186,7 +196,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=2;
-                obtainClassifyData("科技");
+                tecnologyPage=0;
+                obtainClassifyData("科技",tecnologyPage);
 
             }
         });
@@ -210,7 +221,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=3;
-                obtainClassifyData("体育");
+                sportPage=0;
+                obtainClassifyData("体育",sportPage);
 
             }
         });
@@ -234,7 +246,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=4;
-                obtainClassifyData("娱乐");
+                entertainPage=0;
+                obtainClassifyData("娱乐",entertainPage);
             }
         });
         textView6.setOnClickListener(new View.OnClickListener() {
@@ -257,7 +270,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=5;
-                obtainClassifyData("财经");
+                economyPage=0;
+                obtainClassifyData("财经",economyPage);
             }
         });
         textView7.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +294,8 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                 newslist.clear();
                 myAdapter.notifyDataSetChanged();
                 classification=6;
-                obtainClassifyData("军事");
+                militaryPage=0;
+                obtainClassifyData("军事",militaryPage);
             }
         });
         search_bar.setOnClickListener(new View.OnClickListener() {
@@ -295,7 +310,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         return view;
     }
 
-    public void obtainData() {
+    public void obtainData(int page) {
 
         try {
 
@@ -322,7 +337,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
             // String jsonUrl = "http://152.123.55.102:8080/json.html";
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsList/", null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsList/?page="+page, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -376,7 +391,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
             @Override
             public void run() {
                 switch (classification){
-                    case 0:obtainMoreData();break;
+                    case 0:newsPage++;obtainMoreData(newsPage);break;
                     case 1:if(myapp.getUser_id()==null){
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -396,11 +411,11 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
                         obtainMoreRecommendData(myapp.getUser_id().toString(),String.valueOf(recommendPage));
                     }
                             break;
-                    case 2:obtainMoreClassifyData("科技");break;
-                    case 3:obtainMoreClassifyData("体育");break;
-                    case 4:obtainMoreClassifyData("娱乐");break;
-                    case 5:obtainMoreClassifyData("财经");break;
-                    case 6:obtainMoreClassifyData("军事");break;
+                    case 2:tecnologyPage++;obtainMoreClassifyData("科技",tecnologyPage);break;
+                    case 3:sportPage++;obtainMoreClassifyData("体育",sportPage);break;
+                    case 4:entertainPage++;obtainMoreClassifyData("娱乐",entertainPage);break;
+                    case 5:economyPage++;obtainMoreClassifyData("财经",economyPage);break;
+                    case 6:militaryPage++;obtainMoreClassifyData("军事",militaryPage);break;
                 }
 
                 lv.LoadingComplete();
@@ -408,12 +423,12 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         },1000);
 
     }
-    public void obtainMoreData() {
+    public void obtainMoreData(int page) {
 
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsList/", null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsList/?page="+page, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -460,12 +475,12 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         }
     }
 
-    public void obtainClassifyData(String para) {
+    public void obtainClassifyData(String para,int activitypage) {
 
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsList/?news_type="+para, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsList/?news_type="+para+"&page="+activitypage, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -511,12 +526,12 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
             e.printStackTrace();
         }
     }
-    public void obtainMoreClassifyData(String para) {
+    public void obtainMoreClassifyData(String para,int activitypage) {
 
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsList/?news_type="+para, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsList/?news_type="+para+"&page="+activitypage, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -568,7 +583,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -616,7 +631,7 @@ public class homeFragment  extends Fragment implements LoadListView.ILoadListern
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getRecommendList/?user_id="+userID+"&page="+page, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();

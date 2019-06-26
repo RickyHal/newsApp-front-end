@@ -10,7 +10,7 @@
         android:orientation="horizontal"
         android:background="#ffffff">
         <ImageView
-            android:id="@+id/login_back1"
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="TODO"

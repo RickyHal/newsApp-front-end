@@ -1,5 +1,8 @@
 package com.example.win10.personality_newsapp;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
@@ -23,14 +26,24 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MenuItem menuItem;
     private  Boolean back1=false;
+    private  Boolean exit_return=false;
     Myapp myapp;
     long exitTime=0;
+    Boolean loginStatus;
+    Boolean isFirstLogin;
     private BottomNavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SharedPreferences pref=getSharedPreferences("userData", Context.MODE_PRIVATE);
+        loginStatus=pref.getBoolean("loginStatus",false);
+        isFirstLogin=pref.getBoolean("isFirstLogin",false);
+        Integer id= pref.getInt("user_id",0);
+        if(loginStatus){
+        myapp=(Myapp)getApplication();
+        myapp.setUser_id(id);
+        }
         viewPager = findViewById(R.id.viewpager);
         navigationView = findViewById(R.id.bottom_menu);
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.item_bottom_3:
                     JCVideoPlayerStandard.releaseAllVideos();
-                        viewPager.setCurrentItem(2);
+                       viewPager.setCurrentItem(2);
 
                     return true;
                 default:
@@ -103,16 +116,22 @@ public class MainActivity extends AppCompatActivity {
         userFragment userfragment=new userFragment();
         adapter.addFragment(userfragment);
          myapp=(Myapp)getApplication();
-        if(myapp.getUser_id()!=null){
+        if(loginStatus){
         adapter.addFragment(new loginedFragment());
             adapter.delFragment(userfragment);
 
         }
         viewPager.setAdapter(adapter);
-        if(myapp.getUser_id()!=null){
+        if(isFirstLogin){
         viewPager.setCurrentItem(2);
+        SharedPreferences.Editor editor=getSharedPreferences("userData",MODE_PRIVATE).edit();
+        editor.remove("isFirstLogin");
+        editor.apply();
         }
         if(back1=getIntent().getBooleanExtra("back",false)){
+            viewPager.setCurrentItem(2);
+        }
+        if(exit_return=getIntent().getBooleanExtra("exit",false)){
             viewPager.setCurrentItem(2);
         }
 
@@ -120,12 +139,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
+        if(keyCode == KeyEvent.KEYCODE_BACK  || event.getAction() == KeyEvent.ACTION_DOWN)
         {
 
             if((System.currentTimeMillis()-exitTime) > 2000)  //System.currentTimeMillis()无论何时调用，肯定大于2000
             {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "再按一次退出程序",Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             }
             else
@@ -139,4 +158,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
 
     }
+
+    @Override
+    public void onBackPressed() {
+
+
+            if((System.currentTimeMillis()-exitTime) > 2000)  //System.currentTimeMillis()无论何时调用，肯定大于2000
+            {
+                Toast.makeText(MainActivity.this, "再按一次退出程序",Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            }
+            else
+            {
+                finish();
+                System.exit(0);
+            }
+
+
+        }
+
 }

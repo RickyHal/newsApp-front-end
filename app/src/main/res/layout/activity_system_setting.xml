@@ -132,6 +132,7 @@
             android:background="#E7E5E5"/>
 
         <Button
+            android:id="@+id/login_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

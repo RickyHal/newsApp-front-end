@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,12 +27,14 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.news_visit.NewsDetailActivity;
 import com.example.win10.personality_newsapp.news_visit.News_Manifest;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONArray;
@@ -52,10 +55,10 @@ import java.util.Map;
 
 public class CollectionActivity extends AppCompatActivity {
     private List<Map<String,Object>> list;
-
+    private int page=1;
     SimpleAdapter simpleAdapter;
 
-//    时间戳转为具体时间
+    //    时间戳转为具体时间
     private static String timestampToDate(long time) {
         if (time < 10000000000L) {
             time = time * 1000;
@@ -69,9 +72,8 @@ public class CollectionActivity extends AppCompatActivity {
         final List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         try {
             RequestQueue requestQueue= Volley.newRequestQueue(this);
-            Log.d("22","http://120.77.144.237/app/getCollectRec/?user_id="+user_id);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getCollectRec/?user_id="+user_id, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getCollectRec/?user_id="+user_id, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
@@ -87,7 +89,7 @@ public class CollectionActivity extends AppCompatActivity {
                                 map.put("_id",oneitem.getLong("_id"));
                                 list.add(map);
                             }
-                           // 给listview赋值
+                            // 给listview赋值
                             CollectionActivity.this.list=list;
                             ListView listview = (ListView)findViewById(R.id.mylistview);
                             CollectionActivity.this.simpleAdapter = new SimpleAdapter(CollectionActivity.this,
@@ -154,7 +156,7 @@ public class CollectionActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             RequestQueue requestQueue= Volley.newRequestQueue(CollectionActivity.this);
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                    "http://120.77.144.237/app/deleteAllCollect?user_id="+getIntent().getStringExtra("user_id"),
+                                    new PropertyUri().host+"app/deleteAllCollect?user_id="+getIntent().getStringExtra("user_id"),
                                     null, new Response.Listener<JSONObject>() {
                                 public void onResponse(JSONObject response) {
                                     Toast.makeText(getBaseContext(), "成功删除全部收藏", Toast.LENGTH_SHORT).show();
@@ -190,6 +192,56 @@ public class CollectionActivity extends AppCompatActivity {
             }
         });
 
+//        上拉滚动加载更多
+//        listview.setOnScrollListener(new AbsListView.OnScrollListener(){
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    // 判断是否滚动到底部
+//                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+//                        RequestQueue requestQueue= Volley.newRequestQueue(CollectionActivity.this);
+//                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+//                                "http://120.77.144.237/app/getCollectRec/?user_id="+getIntent().getStringExtra("user_id")+"&page="+CollectionActivity.this.page,
+//                                null, new Response.Listener<JSONObject>() {
+//                            public void onResponse(JSONObject response) {
+//                                try {
+//                                    JSONArray data = response.getJSONArray("data");
+//                                    Integer code = (Integer) response.get("code");
+//                                    if (code == 0&&data.length()>0) {
+//                                        for (int i = 0; i < data.length(); i++) {
+//                                            JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+//                                            Map<String, Object> map = new HashMap<String, Object>();
+//                                            map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
+//                                            map.put("time", timestampToDate(oneitem.getLong("timestamp")));
+//                                            map.put("title", oneitem.getString("title"));
+//                                            map.put("_id", oneitem.getLong("_id"));
+//                                            CollectionActivity.this.list.add(map);
+//                                        }
+//                                        CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+//                                        CollectionActivity.this.page=CollectionActivity.this.page+1;
+//                                    }else{
+//                                        Toast.makeText(getApplicationContext(), "没有更多数据了", Toast.LENGTH_LONG).show();
+//                                    }
+//                                } catch (JSONException e) {
+//                                    Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            public void onErrorResponse(VolleyError error) {
+//                                Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                        requestQueue.add(jsonObjectRequest);
+//
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
+
 
 //        每项的点击跳转事件监听
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -207,13 +259,16 @@ public class CollectionActivity extends AppCompatActivity {
 //下拉刷新事件
         final RefreshLayout mRefreshLayout = findViewById(R.id.refreshLayout_collection);
         final RefreshLayout mRefreshLayoutempty = findViewById(R.id.refreshLayout_collection_empty);
+//        正常情况下的下拉刷新
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 putData(getIntent().getStringExtra("user_id"));
+                CollectionActivity.this.page=1;
                 mRefreshLayout.finishRefresh();
             }
         });
+//        为了兼容listview在空不显示提示和smartrefresh刷新的情况
         mRefreshLayoutempty.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -222,7 +277,48 @@ public class CollectionActivity extends AppCompatActivity {
                     CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
                 }
                 putData(getIntent().getStringExtra("user_id"));
+                CollectionActivity.this.page=1;
                 mRefreshLayoutempty.finishRefresh();
+            }
+        });
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                RequestQueue requestQueue = Volley.newRequestQueue(CollectionActivity.this);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        "http://120.77.144.237/app/getCollectRec/?user_id=" + getIntent().getStringExtra("user_id") + "&page=" + CollectionActivity.this.page,
+                        null, new Response.Listener<JSONObject>() {
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray data = response.getJSONArray("data");
+                            Integer code = (Integer) response.get("code");
+                            if (code == 0 && data.length() > 0) {
+                                for (int i = 0; i < data.length(); i++) {
+                                    JSONObject oneitem = data.getJSONObject(i).getJSONArray("news_info").getJSONObject(0);
+                                    Map<String, Object> map = new HashMap<String, Object>();
+                                    map.put("author", oneitem.getString("tag") + " " + oneitem.getString("from"));
+                                    map.put("time", timestampToDate(oneitem.getLong("timestamp")));
+                                    map.put("title", oneitem.getString("title"));
+                                    map.put("_id", oneitem.getLong("_id"));
+                                    CollectionActivity.this.list.add(map);
+                                }
+                                CollectionActivity.this.simpleAdapter.notifyDataSetChanged();
+                                CollectionActivity.this.page = CollectionActivity.this.page + 1;
+                                mRefreshLayout.finishLoadMore();
+                            } else {
+                                mRefreshLayout.setNoMoreData(true);
+                                mRefreshLayout.finishLoadMore();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), "网络异常，请重试", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getBaseContext(), "出现网络问题", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                requestQueue.add(jsonObjectRequest);
             }
         });
 

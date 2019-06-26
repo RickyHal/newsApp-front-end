@@ -110,5 +110,7 @@
     <string name="modifying_sex_text">性别</string>
     <string name="modifying_birth_text">生日</string>
     <string name="modifying_area_text">地区</string>
+    <string name="pwd_input">请输入新密码</string>
+    <string name="pwd_input_again">请再次输入新密码</string>
     <string name="title_activity_test_add_comment">TestAddCommentActivity</string>
 </resources>

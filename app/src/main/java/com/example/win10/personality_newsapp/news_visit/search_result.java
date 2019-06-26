@@ -1,9 +1,11 @@
 package com.example.win10.personality_newsapp.news_visit;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,16 +33,17 @@ public class search_result extends Activity implements LoadListView.ILoadListern
     LoadListView lv;
     String search;
 
-    Myapp myapp;
+    static  int page=0;
     MyAdapter myAdapter;
     RequestQueue requestQueue ;
-
+    Myapp myapp;
     TextView news_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
 
+        myapp=(Myapp) getApplication();
         lv=findViewById(R.id.searchresultlist);
         lv.setInterface(this);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,17 +63,18 @@ public class search_result extends Activity implements LoadListView.ILoadListern
         Intent intent = getIntent();
         search= intent.getStringExtra("searchcontent");
 
-        myapp = (Myapp)getApplication();
-        if(myapp.getUser_id()!=null){
-            obtainSearchData(search,myapp.getUser_id().toString());
+        if(myapp.getUser_id()==null){
+
+            obtainSearchData(search,"-1",page);
+
         }else{
-            obtainSearchData(search,"-1");
+            obtainSearchData(search,myapp.getUser_id().toString(),page);
         }
+
 
 
         myAdapter=new MyAdapter(this,requestQueue,newslist);
         lv.setAdapter(myAdapter);
-
 
 
 
@@ -80,19 +84,22 @@ public class search_result extends Activity implements LoadListView.ILoadListern
 
 
     public void onload() {
+        page++;
         Handler handler=new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-               if(newslist.size()<10){
-                   Toast.makeText(getApplicationContext(),"没有更多了",Toast.LENGTH_LONG).show();
-               }else{
-                   if(myapp!=null&&myapp.getUser_id().toString()!=null){
-                       obtainSearchData(search,myapp.getUser_id().toString());
-                   }else{
-                       obtainSearchData(search,"-1");
-                   }
-               }
+                if(newslist.size()<10){
+                    Toast.makeText(getApplicationContext(),"没有更多了",Toast.LENGTH_LONG).show();
+                }else{
+                    if(myapp.getUser_id()==null){
+
+                        obtainSearchData(search,"-1",page);
+
+                    }else{
+                        obtainSearchData(search,myapp.getUser_id().toString(),page);
+                    }
+                }
 
                 lv.LoadingComplete();
             }
@@ -101,12 +108,12 @@ public class search_result extends Activity implements LoadListView.ILoadListern
 
 
 
-    public void obtainSearchData(String para,String user_id) {
+    public void obtainSearchData(String para,String userid,Integer page) {
 
         try {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/searchNews/?keyword="+para+"&user_id="+user_id, null, new Response.Listener<JSONObject>() {
+                    "http://120.77.144.237/app/searchNews/?keyword="+para+"&user_id="+userid+"&page="+page, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
@@ -132,7 +139,13 @@ public class search_result extends Activity implements LoadListView.ILoadListern
 
                             myAdapter.notifyDataSetChanged();
                         }else{
-                            Toast.makeText(getApplicationContext(),"未找到相关内容！",Toast.LENGTH_SHORT).show();
+                            if(code==1) {
+                                Toast.makeText(getApplicationContext(), "未找到相关内容！", Toast.LENGTH_SHORT).show();
+                            }else if(data.length()<=0){
+                                Toast.makeText(getApplicationContext(), "没有更多了", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), "未知数据！", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         //String size=Integer.toString(newslist.size());
                         //Toast.makeText(getApplicationContext(),size,Toast.LENGTH_LONG).show();
@@ -156,3 +169,4 @@ public class search_result extends Activity implements LoadListView.ILoadListern
     }
 
 }
+

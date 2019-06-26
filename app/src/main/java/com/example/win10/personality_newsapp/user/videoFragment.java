@@ -30,6 +30,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.MainActivity;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.news_visit.Search_viewList;
 import com.example.win10.personality_newsapp.news_visit.search_result;
@@ -52,7 +54,7 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
     RequestQueue requestQueue;
     LoadListView lv;
     String keyword = "";
-
+    long exitTime=0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -126,6 +128,19 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
                     JCVideoPlayerStandard.releaseAllVideos();
+                        if((System.currentTimeMillis()-exitTime) > 2000)  //System.currentTimeMillis()无论何时调用，肯定大于2000
+                        {
+                            Toast.makeText(getActivity(), "再按一次退出程序",Toast.LENGTH_SHORT).show();
+                            exitTime = System.currentTimeMillis();
+                        }
+                        else
+                        {
+                            System.exit(0);
+                        }
+
+
+
+
                     return true;
                 }
                 if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
@@ -178,9 +193,9 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
             final boolean isC = isClean;
             String url;
             if (!(keyword.equals(""))) {
-                url = "http://120.77.144.237/app/getVideoList/?keyword=" + keyword;
+                url = new PropertyUri().host+"app/getVideoList/?keyword=" + keyword;
             } else {
-                url = "http://120.77.144.237/app/getVideoList/";
+                url = new PropertyUri().host+"app/getVideoList/";
             }
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     url, null, new Response.Listener<JSONObject>() {
@@ -211,7 +226,7 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
                                 myAdapter.notifyDataSetChanged();
                             }
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), String.valueOf(response.get("data")), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), String.valueOf(response.get("data")), Toast.LENGTH_LONG).show();
                         }
                         lv.LoadingComplete();
                     } catch (JSONException e) {
@@ -226,7 +241,7 @@ public class videoFragment extends Fragment implements LoadListView.ILoadListern
                 }
             });
             requestQueue.add(jsonObjectRequest);
-        } catch (Exception e) {
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
     }

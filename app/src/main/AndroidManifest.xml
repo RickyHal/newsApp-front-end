@@ -27,7 +27,9 @@
 
 
 
-        <activity android:name=".user.ModifyPwdActivity"></activity>
+        <activity android:name=".user.ModifyPwdActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".user.SystemSettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -61,11 +63,11 @@
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".user.LoginActivity"
@@ -76,6 +78,14 @@
         <activity android:name=".news_visit.NewsDetailActivity" />
         <activity android:name=".news_visit.Search_viewList" />
         <activity android:name=".news_visit.search_result" />
+        <activity android:name=".AnimationActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".user.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -1,14 +1,21 @@
 package com.example.win10.personality_newsapp.user;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,15 +43,35 @@ public class loginedFragment extends Fragment {
     private DividerItemDecoration mDividerItemDecoration;
     RequestQueue requestQueue;
     private SettingAdapter adapter;
+    TextView nickname;
+    CircleImageView p;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(),R.layout.login_user_view,null);
-         myapp = (Myapp)getActivity().getApplication();
+        myapp = (Myapp)getActivity().getApplication();
+        SharedPreferences pref=getActivity().getSharedPreferences("userData", Context.MODE_PRIVATE);
+        Integer id= pref.getInt("user_id",0);
+        String name=pref.getString("user_name","");
+        String email=pref.getString("user_email","");
+        String birth=pref.getString("user_birth","");
+        String location=pref.getString("user_location","");
+        Integer sex= pref.getInt("user_gender",0);
+        String picture=pref.getString("user_avatar_url","");
+        String introduce=pref.getString("user_introduce","");
+        myapp.setUser_id(id);
+        myapp.setUser_name(name);
+        myapp.setUser_avatar_url(picture);
+        myapp.setUser_birth(birth);
+        myapp.setUser_gender(sex);
+        myapp.setUser_location(location);
+        myapp.setUser_email(email);
+        myapp.setUser_introduce(introduce);
         requestQueue= Volley.newRequestQueue(getActivity());
-        TextView nickname=(TextView) view.findViewById(R.id.user_name);
+        nickname=(TextView) view.findViewById(R.id.user_name);
         nickname.setText(myapp.getUser_name());
-        CircleImageView p=(CircleImageView) view.findViewById(R.id.icon_image) ;
+         p=(CircleImageView) view.findViewById(R.id.icon_image) ;
         ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
@@ -69,7 +96,7 @@ public class loginedFragment extends Fragment {
         mDividerItemDecoration=new DividerItemDecoration(recyclerView.getContext(),layoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
         recyclerView.setLayoutManager(layoutManager);
-       adapter =new SettingAdapter(settingList);
+        adapter =new SettingAdapter(settingList);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(MyItemClickListener);
         TextView mycomment=(TextView)view.findViewById(R.id.my_comment);
@@ -106,8 +133,24 @@ public class loginedFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        Log.d("shua","onCreateView");
+        LocalBroadcastManager broadcastManager=LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("android.intent.action.CART_BROADCAST");
+        BroadcastReceiver mReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String msg=intent.getStringExtra("data");
+                if("refresh".equals(msg)){
+                    refresh();
+                    Log.d("tell","刷新");
+                }
+            }
+        };
+        broadcastManager.registerReceiver(mReceiver,intentFilter);
         return view;
     }
+
     private void initSetting(){
         settingList.clear();
         for(int i=0;i<1;i++){
@@ -151,4 +194,59 @@ public class loginedFragment extends Fragment {
 
     };
 
+   /* @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LocalBroadcastManager broadcastManager=LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("android.intent.action.CART_BROADCAST");
+        BroadcastReceiver mReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String msg=intent.getStringExtra("data");
+                if("refresh".equals(msg)){
+                    refresh();
+                    Log.d("tell","刷新");
+                }
+            }
+        };
+        broadcastManager.registerReceiver(mReceiver,intentFilter);
+    }*/
+
+
+    public void refresh(){
+
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences("userData", Context.MODE_PRIVATE);
+            String name = pref.getString("user_name", "");
+            String birth = pref.getString("user_birth", "");
+            String location = pref.getString("user_location", "");
+            Integer sex = pref.getInt("user_gender", 0);
+            String picture = pref.getString("user_avatar_url", "");
+            String introduce = pref.getString("user_introduce", "");
+            myapp.setUser_name(name);
+            myapp.setUser_avatar_url(picture);
+            myapp.setUser_birth(birth);
+            myapp.setUser_gender(sex);
+            myapp.setUser_location(location);
+            myapp.setUser_introduce(introduce);
+            nickname.setText(myapp.getUser_name());
+            ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
+                @Override
+                public void putBitmap(String url, Bitmap bitmap) {
+                }
+
+                @Override
+                public Bitmap getBitmap(String url) {
+                    return null;
+                }
+            });
+            ImageLoader.ImageListener listener = ImageLoader.getImageListener(p,
+                    R.drawable.ic_launcher,R.drawable.chahao);
+            imageLoader.get(myapp.getUser_avatar_url(), listener);
+
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
 }

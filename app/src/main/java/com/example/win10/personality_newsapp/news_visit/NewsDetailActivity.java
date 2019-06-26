@@ -24,6 +24,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.showcomment.TestAddCommentActivity;
@@ -98,7 +99,7 @@ public class NewsDetailActivity extends Activity {
             // String jsonUrl = "http://152.123.55.102:8080/json.html";
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsDetail/?_id="+news_id+"&user_id="+user_id, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsDetail/?_id="+news_id+"&user_id="+user_id, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     //Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();

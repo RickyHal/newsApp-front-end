@@ -14,4 +14,7 @@
     <color name="colorCursor">#cccccc</color>
     <color name="colortitleblue">#0388fd</color>
     <color name="bg_toast">#CC000000</color>
+    <color name="dimgray">#696969</color>
+    <color name="animationbackground">#FFFFFF</color>
+    <color name="test">#C4C2C2</color>
 </resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:background="@color/animationbackground"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txttime"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="40dp"
+            android:textColor="#8B4513"
+            android:textSize="20dp"
+            android:gravity="center"
+
+            android:background="@drawable/rectangle_enter"
+            android:text="5" />
+
+    <ImageView
+        android:id="@+id/animation_show"
+        android:layout_marginTop="60dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/animationlist" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:textColor="#8B4513"
+            android:gravity="center"
+            android:layout_marginTop="80dp"
+            android:textSize="40dp"
+            android:text="笨   鸟   先   飞" />
+    </LinearLayout>
+
+</LinearLayout>

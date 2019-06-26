@@ -33,6 +33,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.MainActivity;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 
@@ -92,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity  {
 
     public void getCheckcode(final String email){
         try {
-            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,"http://www.newsapp.club/app/sendCheckCode/",new Response.Listener<String>() {
+            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,new PropertyUri().host+"app/sendCheckCode/",new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -137,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity  {
     public void getRegisterCode(final String email, final String code, final String md5pwd, final String birthDate, final String area, final String sexState, final String name){
         time.start();
         try {
-            String url= "http://120.77.144.237/app/signUp/";
+            String url= new PropertyUri().host+"app/signUp/";
             Log.d("url",url);
             StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
                 @Override
@@ -204,7 +205,7 @@ public class RegisterActivity extends AppCompatActivity  {
             /**
              * Post请求，验证账号密码，正确则返回用户数据
              */
-            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,"http://120.77.144.237/app/logIn/",new Response.Listener<String>() {
+            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,new PropertyUri().host+"app/logIn/",new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -274,7 +275,7 @@ public class RegisterActivity extends AppCompatActivity  {
     }
     private void goLayout1(){
         setContentView(R.layout.activity_registerend);
-        time = new TimeCount(6000,1000);
+        time = new TimeCount(60000,1000);
         time.start();
         re_getcode=(TextView)findViewById(R.id.re_getcode);
         identifying_code=(EditText)findViewById(R.id.identifying_code) ;
@@ -364,7 +365,6 @@ public class RegisterActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 showSelectArea();
-                BToast.showText(RegisterActivity.this,"地址设置成功",true);
             }
         });
 
@@ -434,9 +434,9 @@ public class RegisterActivity extends AppCompatActivity  {
         return m.matches();
     }
 
-    private CityPicker mCityPicker;
+    private   CityPicker mCityPicker;
     //地址选择
-    private void showSelectArea(){
+    private   void showSelectArea(){
         if(mCityPicker==null){
             mCityPicker = new CityPicker.Builder(this)
                     .title("请选择您的地址")  //标题
@@ -463,6 +463,7 @@ public class RegisterActivity extends AppCompatActivity  {
                     String  distric=citySelected[2];  //区县
 
                     se_area.setText(province+city);
+                    BToast.showText(RegisterActivity.this,"地址设置成功",true);
                 }
             });
         }

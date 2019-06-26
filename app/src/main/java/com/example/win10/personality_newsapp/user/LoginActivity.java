@@ -2,6 +2,7 @@ package com.example.win10.personality_newsapp.user;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.win10.personality_newsapp.MainActivity;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.news_visit.news_item;
 
@@ -99,15 +101,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             /**
              * Post请求，验证账号密码，正确则返回用户数据
              */
-            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,"http://120.77.144.237/app/logIn/",new Response.Listener<String>() {
+            StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,new PropertyUri().host+"app/logIn/",new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        JSONArray data = jsonObject.getJSONArray("data");
+
                         Integer code = (Integer) jsonObject.get("code");
 
                         if (code == 0) {
+                            JSONArray data = jsonObject.getJSONArray("data");
                             for (int i = 0; i < 1; i++) {
                                 JSONObject item = data.getJSONObject(i);
                                 Integer id=(Integer) item.get("user_id");
@@ -118,6 +121,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Integer sex=(Integer) item.get("user_gender");
                                 String picture=item.getString("user_avatar_url");
                                 String introduce=item.getString("user_introduce");
+                                SharedPreferences.Editor editor=getSharedPreferences("userData",MODE_PRIVATE).edit();
+                                editor.putBoolean("loginStatus",true);
+                                editor.putBoolean("isFirstLogin",true);
+                                editor.putInt("user_id",id);
+                                editor.putString("user_name",name);
+                                editor.putString("user_avatar_url",picture);
+                                editor.putString("user_email",email);
+                                editor.putString("user_birth",birth);
+                                editor.putString("user_location",location);
+                                editor.putString("user_introduce",introduce);
+                                editor.putInt("user_gender",sex);
+                                editor.apply();
                                 myapp=(Myapp)getApplication();
                                 myapp.setUser_id(id);
                                 myapp.setUser_name(name);
@@ -142,7 +157,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             dialog.create();
                             dialog.show();
                         }else {
-                            Toast.makeText(LoginActivity.this, "账号或密码输入错误！", Toast.LENGTH_SHORT).show();
+                            String data = jsonObject.getString("data");
+                            Toast.makeText(LoginActivity.this, data, Toast.LENGTH_SHORT).show();
 
                         }
                     } catch (JSONException e) {

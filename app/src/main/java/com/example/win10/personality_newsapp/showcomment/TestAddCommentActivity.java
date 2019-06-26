@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.win10.personality_newsapp.PropertyUri;
 import com.example.win10.personality_newsapp.R;
 import com.example.win10.personality_newsapp.comment.CommentActivity;
 import com.example.win10.personality_newsapp.comment.CommentBean;
@@ -60,7 +61,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
     private void checkiscollected(String user_id){
         try {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                "http://www.newsapp.club/app/checkCollect/?user_id="+user_id+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
+                new PropertyUri().host+"app/checkCollect/?user_id="+user_id+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -91,7 +92,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
     private void putData(String news_id) {
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    "http://120.77.144.237/app/getNewsComment/?_id="+news_id, null, new Response.Listener<JSONObject>() {
+                    new PropertyUri().host+"app/getNewsComment/?_id="+news_id, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
@@ -180,7 +181,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                     reply_content=edittext.getText().toString();
                 }else{
                     reply_content=edittext.getText().toString()+"//@"+list.get(TestAddCommentActivity.this.position).getNickname().split(" ")[0]
-                            +":"+list.get(TestAddCommentActivity.this.position).getComment_content();
+                            +":"+list.get(TestAddCommentActivity.this.position).getComment_content().split("//@")[0];
 
                 }
                 commentitem.setComment_content(reply_content);
@@ -188,7 +189,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
                 commentitem.setRelease_time(df.format(new Date()));
                 list.add(commentitem);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        "http://120.77.144.237/app/addComment/?_id="+String.valueOf(getIntent().getStringExtra("news_id"))+"&user_id="+myapp.getUser_id().toString()+
+                        new PropertyUri().host+"app/addComment/?_id="+String.valueOf(getIntent().getStringExtra("news_id"))+"&user_id="+myapp.getUser_id().toString()+
                                 "&comment_text="+reply_content, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -220,7 +221,7 @@ public class TestAddCommentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                            "http://120.77.144.237/app/collectNews/?user_id="+myapp.getUser_id().toString()+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
+                            new PropertyUri().host+"app/collectNews/?user_id="+myapp.getUser_id().toString()+"&_id="+String.valueOf(getIntent().getStringExtra("news_id")), null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
